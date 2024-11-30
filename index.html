@@ -19,34 +19,76 @@
     </script>
 </head>
 <body class="bg-white dark:bg-slate-900 text-gray-900 dark:text-white transition-colors duration-200">
-    <!-- Header -->
-    <div class="container mx-auto flex justify-between items-center p-4">
-        <a href="index.html" class="flex items-center space-x-2">
-            <div class="bg-no-repeat bg-contain bg-center h-20 w-20 bg-[url('./Kfir_Amoyal_A_logo_for_a_website_for_hebrew_learning_for_engli_514ae55e-3fd7-44f5-9540-322458481682.png')]">
-            </div>
-            <span class="text-2xl font-bold">AlefBet</span>
+   <!-- Navbar -->
+   <div class="container mx-auto flex justify-between items-center p-4">
+    <!-- Logo -->
+    <a href="index.html" class="flex items-center space-x-2">
+        <div class="bg-no-repeat bg-contain bg-center h-20 w-20 bg-[url('./Kfir_Amoyal_A_logo_for_a_website_for_hebrew_learning_for_engli_514ae55e-3fd7-44f5-9540-322458481682.png')]">
+        </div>
+        <span class="text-2xl font-bold">AlefBet</span>
+    </a>
+
+    <!-- Navbar -->
+    <div class="flex items-center space-x-4">
+        <!-- Navigation Buttons -->
+        <a href="mywords.html" class="hidden lg:block px-4 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200">
+            My Words
+        </a>
+        <a href="account.html" class="hidden lg:block px-4 py-2 rounded-lg font-medium bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200">
+            Account
+        </a>
+        <a href="contact.html" class="hidden lg:block px-4 py-2 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all duration-200">
+            Contact Us
         </a>
 
-        <div class="flex items-center space-x-4">
-            <a href="mywords.html" class="px-4 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200">
-                My Words
-            </a>
-            <a href="account.html" class="px-4 py-2 rounded-lg font-medium bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200">
-                Account
-            </a>
-            <a href="contact.html" class="px-4 py-2 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all duration-200">
-                Contact Us
-            </a>
-            <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800">
-                <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-                <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-            </button>
-        </div>
+        <!-- Theme Toggle Button -->
+        <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800">
+            <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+
+        <!-- Hamburger Icon for Small Screens -->
+        <button id="hamburgerButton" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
     </div>
+
+    <!-- Collapsible Menu -->
+    <div id="mobileMenu" class="absolute top-full right-0 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-lg p-4 hidden z-50">
+        <a href="mywords.html" class="block px-4 py-2 rounded-lg font-medium text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200">
+            My Words
+        </a>
+        <a href="account.html" class="block px-4 py-2 rounded-lg font-medium text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200">
+            Account
+        </a>
+        <a href="contact.html" class="block px-4 py-2 rounded-lg font-medium text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200">
+            Contact Us
+        </a>
+    </div>
+</div>
+
+
+    <!-- Collapsible Menu -->
+    <div id="mobileMenu" class="absolute top-full right-0 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-lg p-4 hidden z-50">
+        <a href="mywords.html" class="block px-4 py-2 rounded-lg font-medium text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200">
+            My Words
+        </a>
+        <a href="account.html" class="block px-4 py-2 rounded-lg font-medium text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200">
+            Account
+        </a>
+        <a href="contact.html" class="block px-4 py-2 rounded-lg font-medium text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200">
+            Contact Us
+        </a>
+    </div>
+</div>
+
+
 
 <!-- Hero Section -->
 <section class="w-full">
@@ -136,15 +178,10 @@
                                  transition-all duration-200 cursor-pointer">Word 4</li>
                     </ul>
                 </div>
-
-                <!-- Main Learning Area -->
 <!-- Main Learning Area -->
 <div id="tabWords" class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg flex-1 transition-all duration-300 hover:shadow-xl">
-    <!-- Save Button -->
-    <button class="w-fit px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 
-                 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95">
-        Save
-    </button>
+
+
 
     <h2 class="text-2xl font-bold mt-6 mb-6 text-gray-800 dark:text-white">Translate English to Hebrew</h2>
 
@@ -174,7 +211,13 @@
      class="mt-4 text-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 
             p-4 rounded-lg border border-gray-300 dark:border-gray-600 
             hidden transition-all duration-300">
-    Translation will appear here...
+    <!-- This div will contain the full sentence translation -->
+    <div id="translatedText" class="mb-4 text-xl font-bold"></div>
+    
+    <!-- This div will contain individual words that can be saved -->
+    <div id="wordsList" class="mt-4 space-y-3">
+        <!-- Words will be dynamically added here by JavaScript -->
+    </div>
 </div>
 
 
@@ -227,7 +270,8 @@
         <p>© 2024 AlefBet. All rights reserved.</p>
     </footer>
 
-<script src="./translate.js"></script>
+    <script src="./wordManager.js"></script>
+    <script src="./translate.js"></script>
 
 </body>
 </html>
