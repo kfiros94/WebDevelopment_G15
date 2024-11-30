@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact - Hebrew Learning Hub</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="h-screen bg-gradient-to-b from-blue-900 to-slate-800 flex items-center justify-center text-white">
+    <div class="bg-slate-800 p-8 rounded-lg shadow-lg w-96">
+        <h1 class="text-3xl font-bold mb-6 text-center">Contact Us</h1>
+
+        <!-- Contact Form -->
+        <form id="contact-form" class="space-y-6">
+            <div>
+                <label for="name" class="block text-sm font-medium">Name</label>
+                <input type="text" id="name" name="name" required class="w-full mt-2 p-3 rounded bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium">Email</label>
+                <input type="email" id="email" name="email" required class="w-full mt-2 p-3 rounded bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="message" class="block text-sm font-medium">Your Message</label>
+                <textarea id="message" name="message" required class="w-full mt-2 p-3 rounded bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg shadow-md transition-all">Send Message</button>
+        </form>
+
+        <!-- Success Message -->
+        <div id="status-message" class="text-center mt-4 text-green-500 hidden">
+            Your message has been sent successfully!
+        </div>
+
+        <!-- Back to Home Button -->
+        <div class="text-center mt-4">
+            <a href="index.html">
+                <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg transition-all">Back to Home</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // כאשר המשתמש מגיש את הטופס
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // מונע את שליחת הטופס באופן רגיל
+
+            // אוספים את המידע מהטופס
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // יצירת אובייקט עם הנתונים
+            const contactData = { name, email, message };
+
+            // הצגת הודעה שהפנייה נשלחה
+            document.getElementById('status-message').textContent = 'Your message has been sent successfully!';
+            document.getElementById('status-message').classList.remove('hidden'); // מציג את ההודעה
+
+            // ריקון התוכן בטופס
+            document.getElementById('contact-form').reset(); // ריסטרט של הטופס (מנקה את כל השדות)
+
+            // אם תרצה, תוכל לשמור את הנתונים בקובץ JSON או לשלוח אותם לשרת
+            // כרגע התהליך נעצר כאן, אך תוכל להוסיף פונקציות אחסון / שליחה על פי הצורך שלך.
+        });
+    </script>
+</body>
+</html>

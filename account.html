@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Hebrew Learning Hub</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white duration-200">
+    <!-- Navigation section -->
+    <nav class="container mx-auto flex justify-between items-center p-4 bg-white dark:bg-gray-900 shadow-md">
+        <!-- Left side: Logo and Site Name Container -->
+        <div class="flex items-center space-x-2">
+            <!-- Logo with Home Link -->
+            <a href="index.html" class="block hover:opacity-90 transition-all duration-200">
+                <div class="bg-no-repeat bg-contain bg-center h-20 w-20 bg-[url('./Kfir_Amoyal_A_logo_for_a_website_for_hebrew_learning_for_engli_514ae55e-3fd7-44f5-9540-322458481682.png')] hover:scale-105 transition-transform duration-200">
+                </div>
+            </a>
+            <!-- Site Name with Home Link -->
+            <a href="index.html" class="text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                AlefBet
+            </a>
+        </div>
+    
+        <!-- Right side: Navigation Links with Theme Toggle -->
+        <div class="flex items-center space-x-4">
+            <!-- Navigation Links -->
+            <a href="mywords.html" class="px-4 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200">
+                My Words
+            </a>
+            <a href="account.html" class="px-4 py-2 rounded-lg font-medium bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200">
+                Account
+            </a>
+            <a href="contact.html" class="px-4 py-2 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all duration-200">
+                Contact Us
+            </a>
+    
+            <!-- Theme Toggle Button - Now positioned after the navigation links -->
+            <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main content section -->
+    <main class="flex-1 container mx-auto px-4 py-8" role="main">
+        <h1 id="my-account" class="text-3xl font-bold mb-8 dark:text-white">My Account</h1>
+
+        <div class="bg-slate-800 rounded-lg p-6 text-white">
+            <h2 id="profile-information" class="text-xl font-bold mb-4">Profile Information</h2>
+
+            <div class="space-y-4">
+                <div class="flex flex-col space-y-2">
+                    <label for="name" class="font-medium">Name</label>
+                    <input type="text" id="name" class="rounded px-4 py-2 bg-slate-700">
+                </div>
+
+                <div class="flex flex-col space-y-2">
+                    <label for="email" class="font-medium">Email</label>
+                    <input type="email" id="email" class="rounded px-4 py-2 bg-slate-700">
+                </div>
+
+                <div class="flex flex-col space-y-2">
+                    <label for="level" class="font-medium">Learning Level</label>
+                    <select id="level" class="rounded px-4 py-2 bg-slate-700">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <button onclick="updateProfile()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition-colors">
+                    Update Profile
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="container mx-auto text-center py-4 dark:text-white">
+        © 2024 Hebrew Learning Hub. All rights reserved.
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Get user data from localStorage
+        const userName = localStorage.getItem('userName');
+        const userEmail = localStorage.getItem('userEmail');
+
+        // Set the values if they exist
+        if (userName) document.getElementById('name').value = userName;
+        if (userEmail) document.getElementById('email').value = userEmail;
+
+        function updateProfile() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const level = document.getElementById('level').value;
+
+            // Save to localStorage
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userLevel', level);
+
+            alert('Profile updated successfully!');
+        }
+    </script>
+
+    <script type="module">
+        import { ThemeManager } from './themeToggle.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+        });
+    </script>
+</body>
+</html>

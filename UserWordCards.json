@@ -1,0 +1,27 @@
+[
+    {
+        "hebrewText": "שלום",
+        "translation": "Hello",
+        "practiceCount": 5
+    },
+    {
+        "hebrewText": "מורה",
+        "translation": "Teacher",
+        "practiceCount": 3
+    },
+    {
+        "hebrewText": "תלמיד",
+        "translation": "Student",
+        "practiceCount": 7
+    },
+    {
+        "hebrewText": "עיפרון",
+        "translation": "Pencil",
+        "practiceCount": 4
+    },
+    {
+        "hebrewText": "מחברת",
+        "translation": "Notebook",
+        "practiceCount": 2
+    }
+]

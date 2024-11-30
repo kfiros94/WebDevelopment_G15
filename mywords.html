@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Hebrew Vocabulary - AlefBet</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <!-- Navigation Bar -->
+    <nav class="container mx-auto flex justify-between items-center p-4 bg-white dark:bg-gray-900 shadow-md">
+        <!-- Left side: Logo and Site Name Container -->
+        <div class="flex items-center space-x-2">
+            <a href="index.html" class="block hover:opacity-90 transition-all duration-200">
+                <div class="bg-no-repeat bg-contain bg-center h-20 w-20 bg-[url('./Kfir_Amoyal_A_logo_for_a_website_for_hebrew_learning_for_engli_514ae55e-3fd7-44f5-9540-322458481682.png')] hover:scale-105 transition-transform duration-200">
+                </div>
+            </a>
+            <a href="index.html" class="text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                שָׁלוֹם
+            </a>
+        </div>
+
+        <!-- Right side: Navigation Links with Theme Toggle -->
+        <div class="flex items-center space-x-4">
+            <a href="mywords.html" class="px-4 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200">
+                My Words
+            </a>
+            <a href="account.html" class="px-4 py-2 rounded-lg font-medium bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200">
+                Account
+            </a>
+            <a href="contact.html" class="px-4 py-2 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all duration-200">
+                Contact Us
+            </a>
+
+            <!-- Theme Toggle Button -->
+            <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <div id="sunIcon" class="w-5 h-5 hidden">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </div>
+                <div id="moonIcon" class="w-5 h-5">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </div>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 container mx-auto px-4 py-8" role="main">
+        <h1 class="text-3xl font-bold mb-8 transition-colors duration-200">My Hebrew Vocabulary</h1>
+
+        <!-- Add New Word Section -->
+        <section class="bg-slate-800 rounded-lg p-6 mb-8 transition-colors duration-200">
+            <h2 class="text-xl font-bold mb-4 text-white">Add New Word</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                <div class="flex items-center gap-2">
+                    <input type="text" id="newHebrewWord" placeholder="Hebrew Word" class="w-full p-2 rounded bg-slate-700 text-white">
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="newTranslation" placeholder="Translation" class="w-full p-2 rounded bg-slate-700 text-white">
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="addWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
+                        Add Word
+                    </button>
+                    <button onclick="recordAudio()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors">
+                        Audio
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Words Table -->
+        <div class="bg-slate-800 rounded-lg overflow-x-auto transition-colors duration-200">
+            <table class="w-full text-white">
+                <thead>
+                    <tr class="border-b border-slate-700">
+                        <th class="p-4 text-left">Hebrew</th>
+                        <th class="p-4 text-left">Pronunciation</th>
+                        <th class="p-4 text-left">Translation</th>
+                        <th class="p-4 text-left">Audio</th>
+                        <th class="p-4 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="wordsList">
+                    <tr class="border-b border-slate-700">
+                        <td class="p-4">שָׁלוֹם</td>
+                        <td class="p-4">Shalom</td>
+                        <td class="p-4">Peace, hello, goodbye</td>
+                        <td class="p-4">
+                            <button onclick="playAudio('שָׁלוֹם')" class="text-blue-400 hover:text-blue-300">Audio</button>
+                        </td>
+                        <td class="p-4">
+                            <button onclick="deleteWord(this)" class="text-red-400 hover:text-red-300">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-4">תּוֹדָה</td>
+                        <td class="p-4">Todah</td>
+                        <td class="p-4">Thank you</td>
+                        <td class="p-4">
+                            <button onclick="playAudio('תּוֹדָה')" class="text-blue-400 hover:text-blue-300">Audio</button>
+                        </td>
+                        <td class="p-4">
+                            <button onclick="deleteWord(this)" class="text-red-400 hover:text-red-300">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="container mx-auto text-center py-4">
+        <p class="text-gray-600 dark:text-gray-400">© 2024 Hebrew Learning Hub. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts section -->
+    <script>
+        // Function to handle speech synthesis
+        function playAudio(word) {
+            // Check if speech synthesis is supported
+            if ('speechSynthesis' in window) {
+                // Stop any ongoing speech
+                window.speechSynthesis.cancel();
+
+                // Create a new utterance
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'he-IL'; // Set language to Hebrew
+                utterance.rate = 0.8; // Slightly slower rate for better clarity
+                utterance.pitch = 1; // Normal pitch
+
+                // Play the audio
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.error('Speech synthesis not supported');
+                alert('Speech synthesis is not supported in your browser');
+            }
+        }
+
+        // Function to delete a word from the list
+        function deleteWord(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+
+        // Function to add a new word to the list
+        function addWord() {
+            const hebrewWord = document.getElementById('newHebrewWord').value;
+            const translation = document.getElementById('newTranslation').value;
+
+            if (!hebrewWord || !translation) {
+                alert('Please fill in both Hebrew word and translation');
+                return;
+            }
+
+            const wordsList = document.getElementById('wordsList');
+            const newRow = document.createElement('tr');
+            newRow.className = 'border-b border-slate-700';
+            newRow.innerHTML = `
+                <td class="p-4">${hebrewWord}</td>
+                <td class="p-4">${hebrewWord}</td>
+                <td class="p-4">${translation}</td>
+                <td class="p-4">
+                    <button onclick="playAudio('${hebrewWord}')" class="text-blue-400 hover:text-blue-300">Audio</button>
+                </td>
+                <td class="p-4">
+                    <button onclick="deleteWord(this)" class="text-red-400 hover:text-red-300">Delete</button>
+                </td>
+            `;
+            wordsList.appendChild(newRow);
+
+            // Clear input fields
+            document.getElementById('newHebrewWord').value = '';
+            document.getElementById('newTranslation').value = '';
+        }
+    </script>
+
+    <!-- Theme Toggle Script -->
+    <script type="module">
+        import { ThemeManager } from './themeToggle.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Hebrew Learning Hub</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="h-screen bg-gradient-to-b from-blue-900 to-slate-800 flex items-center justify-center text-white">
+    <!-- Container -->
+    <div class="bg-slate-800 p-8 rounded-lg shadow-lg w-96">
+        <h1 class="text-3xl font-bold mb-6 text-center">Login</h1>
+        
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label for="name" class="block text-sm font-medium">Name</label>
+                <input type="text" id="name" name="name" required class="w-full mt-2 p-3 rounded bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium">Email</label>
+                <input type="email" id="email" name="email" required class="w-full mt-2 p-3 rounded bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium">Password</label>
+                <input type="password" id="password" name="password" required class="w-full mt-2 p-3 rounded bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <!-- Error message container -->
+            <div id="error-message" class="text-red-500 text-center mt-2 hidden">Invalid name, email or password!</div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg shadow-md transition-all">Log In</button>
+        </form>
+
+        <!-- Back to Home Button -->
+        <div class="text-center mt-4">
+            <a href="index.html" class="text-sm text-blue-400 hover:text-blue-500">
+                <button class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg transition-all">Back to Home</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript File -->
+    <script src="./main.js" type="module"></script>
+</body>
+</html>
