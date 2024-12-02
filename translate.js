@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch('https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=he', {
                 method: 'POST',
                 headers: {
-                    'Ocp-Apim-Subscription-Key': '8rsq4EfUQDZfSUNNArnI5I4V5hchLHHvGWEyoEErdatl4yD4NF3mJQQJ99AKAC3pKaRXJ3w3AAAbACOG25Yf', // The API key פה שמים את ה
+                    'Ocp-Apim-Subscription-Key': 'SECRET KEY DO NOT PUSH TO GIT', // The API key פה שמים את ה
                     'Ocp-Apim-Subscription-Region': 'eastasia', // Replace with the region
                     'Content-Type': 'application/json',
                 },
