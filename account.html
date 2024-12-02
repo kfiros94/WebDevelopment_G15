@@ -1,119 +1,302 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Account - Hebrew Learning Hub</title>
-    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css" />
+
+
+
+    
+<!------->
+
+
+<!---זה מה שנותן לכרטיסיה את האלמנט של הגלילה---->
+<style>
+    /* Make the section scrollable */
+    .scrollable-section {
+        max-height: 500px; /* Limit the height of the section */
+        overflow-y: auto; /* Enable vertical scrolling */
+        border: 1px solid #2d3748; /* Optional: Add a border */
+        border-radius: 8px; /* Optional: Round the corners */
+        padding: 1rem; /* Optional: Add some padding */
+    }
+
+    /* Optional: Style the scrollbar */
+    .scrollable-section::-webkit-scrollbar {
+        width: 8px;
+    }
+    .scrollable-section::-webkit-scrollbar-thumb {
+        background-color: rgba(66, 153, 225, 0.8);
+        border-radius: 10px;
+    }
+    .scrollable-section::-webkit-scrollbar-track {
+        background-color: #2d3748;
+    }
+</style>
+
+<!------->
+
+
+
 </head>
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white duration-200">
-    <!-- Navigation section -->
-    <nav class="container mx-auto flex justify-between items-center p-4 bg-white dark:bg-gray-900 shadow-md">
-        <!-- Left side: Logo and Site Name Container -->
-        <div class="flex items-center space-x-2">
-            <!-- Logo with Home Link -->
-            <a href="index.html" class="block hover:opacity-90 transition-all duration-200">
-                <div class="bg-no-repeat bg-contain bg-center h-20 w-20 bg-[url('./Kfir_Amoyal_A_logo_for_a_website_for_hebrew_learning_for_engli_514ae55e-3fd7-44f5-9540-322458481682.png')] hover:scale-105 transition-transform duration-200">
-                </div>
-            </a>
-            <!-- Site Name with Home Link -->
-            <a href="index.html" class="text-2xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
-                AlefBet
-            </a>
-        </div>
+
+<body class="h-screen bg-gradient-to-b from-blue-900 to-slate-800 flex flex-col text-white">
+    <!-- Navigation Bar -->
+<nav class="bg-slate-900 p-4 shadow-lg">
+  <div class="container mx-auto flex justify-between items-center">
+      <!-- Logo on the left -->
+      <div class="flex items-center">
+          <a href="index.html" class="flex items-center space-x-2">
+              <img src="/vite.svg" alt="Hebrew Learning Hub Logo" class="h-8 w-8"/>
+              <span class="text-2xl font-bold">שָׁלוֹם</span>
+          </a>
+      </div>
+
+      <!-- Navigation buttons on the right -->
+      <div class="flex items-center space-x-4">
+          <a href="mywords.html" 
+             class="px-4 py-2 rounded-lg font-medium
+                    bg-blue-600 hover:bg-blue-700
+                    dark:bg-blue-700 dark:hover:bg-blue-800
+                    transform hover:scale-105 transition-all duration-200
+                    shadow-lg hover:shadow-blue-500/50
+                    border border-transparent hover:border-blue-400
+                    flex items-center space-x-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>My Words</span>
+          </a>
+      
+          <a href="index.html" 
+             class="px-4 py-2 rounded-lg font-medium
+                    bg-red-600 hover:bg-red-700
+                    dark:bg-red-700 dark:hover:bg-red-800
+                    transform hover:scale-105 transition-all duration-200
+                    shadow-lg hover:shadow-red-500/50
+                    border border-transparent hover:border-red-400
+                    flex items-center space-x-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span>Log Out</span>
+          </a>
+      
+          <a href="contact.html" 
+             class="px-4 py-2 rounded-lg font-medium
+                    bg-green-600 hover:bg-green-700
+                    dark:bg-green-700 dark:hover:bg-green-800
+                    transform hover:scale-105 transition-all duration-200
+                    shadow-lg hover:shadow-green-500/50
+                    border border-transparent hover:border-green-400
+                    flex items-center space-x-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span>Contact Us</span>
+          </a>
+      </div>
+  </div>
+</nav>
+
+ 
+
+<!-- התחלה כל השורה הראשית -->
+
+    <main id="the-main" class="flex-1 container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">My Account</h1>
     
-        <!-- Right side: Navigation Links with Theme Toggle -->
-        <div class="flex items-center space-x-4">
-            <!-- Navigation Links -->
-            <a href="mywords.html" class="px-4 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200">
-                My Words
-            </a>
-            <a href="account.html" class="px-4 py-2 rounded-lg font-medium bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200">
-                Account
-            </a>
-            <a href="contact.html" class="px-4 py-2 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all duration-200">
-                Contact Us
-            </a>
+        <!-- Row 1 -->
+        <div id="row1" class="grid grid-cols-5 gap-4">
+            <!-- Profile Information -->
+            <div id="profile-information" class="col-span-1 bg-slate-800 rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-4">Profile Information</h2>
+                <form class="space-y-4">
+                    <div>
+                        <label class="block mb-2">Name</label>
+                        <input type="text" value="John Doe" class="w-full p-2 rounded bg-slate-700">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Email</label>
+                        <input type="email" value="john@example.com" class="w-full p-2 rounded bg-slate-700">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Learning Level</label>
+                        <select class="w-full p-2 rounded bg-slate-700">
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option>Advanced</option>
+                        </select>
+                    </div>
+                    <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Update Profile</button>
+                </form>
+            </div>
     
-            <!-- Theme Toggle Button - Now positioned after the navigation links -->
-            <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-                <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Main content section -->
-    <main class="flex-1 container mx-auto px-4 py-8" role="main">
-        <h1 id="my-account" class="text-3xl font-bold mb-8 dark:text-white">My Account</h1>
-
-        <div class="bg-slate-800 rounded-lg p-6 text-white">
-            <h2 id="profile-information" class="text-xl font-bold mb-4">Profile Information</h2>
-
-            <div class="space-y-4">
-                <div class="flex flex-col space-y-2">
-                    <label for="name" class="font-medium">Name</label>
-                    <input type="text" id="name" class="rounded px-4 py-2 bg-slate-700">
+            <!-- Learning Statistics -->
+            <div id="learning-statistics" class="col-span-1 bg-slate-800 rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-4">Learning Progress</h2>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-bold mb-2">Words Learned</h3>
+                        <div class="bg-slate-700 rounded-lg p-4">
+                            <span class="text-3xl font-bold">42</span>
+                            <span class="text-gray-400 ml-2">words</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2">Study Streak</h3>
+                        <div class="bg-slate-700 rounded-lg p-4">
+                            <span class="text-3xl font-bold">7</span>
+                            <span class="text-gray-400 ml-2">days</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2">Practice Sessions</h3>
+                        <div class="bg-slate-700 rounded-lg p-4">
+                            <span class="text-3xl font-bold">15</span>
+                            <span class="text-gray-400 ml-2">this week</span>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="flex flex-col space-y-2">
-                    <label for="email" class="font-medium">Email</label>
-                    <input type="email" id="email" class="rounded px-4 py-2 bg-slate-700">
+            </div>
+    
+            <!-- Main Tab -->
+            <div id="Main tab" class="col-span-3 bg-slate-800 rounded-lg p-6">
+                <!-- Clear Button -->
+                <div class="flex justify-end">
+                    <button id="clear-btn" class="flex justify-end px-4 py-2 rounded-lg font-medium bg-slate-700 hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-blue-500/50">
+                        Clear
+                    </button>
                 </div>
-
-                <div class="flex flex-col space-y-2">
-                    <label for="level" class="font-medium">Learning Level</label>
-                    <select id="level" class="rounded px-4 py-2 bg-slate-700">
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                </div>
-
-                <button onclick="updateProfile()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition-colors">
-                    Update Profile
-                </button>
+    
+                <!-- Scrollable Section -->
+                <section class="max-w-4xl mx-auto p-6 scrollable-section" id="scrollable-container">
+                    <div id="main-wrapper" class="flex flex-col gap-4">
+                        <div id="content-container" class="flex gap-2 template-container">
+                            <!-- Word List Container -->
+                            <div class="bg-slate-700 rounded-lg p-2 shadow-lg overflow-y-auto w-2/6 h-48">
+                                <h4 class="text-lg font-bold mb-4 text-center">Word List</h4>
+                                <ul class="space-y-2">
+                                    <li class="px-4 py-2 bg-slate-800 rounded-lg shadow">Word 1</li>
+                                    <li class="px-4 py-2 bg-slate-800 rounded-lg shadow">Word 2</li>
+                                    <li class="px-4 py-2 bg-slate-800 rounded-lg shadow">Word 3</li>
+                                    <li class="px-4 py-2 bg-slate-800 rounded-lg shadow">Word 4</li>
+                                </ul>
+                            </div>
+                            <div id="tabWords" class="bg-slate-800 rounded-lg p-6 shadow-lg flex-1">
+                                <div class="flex flex-col gap-4">
+                                    <!-- Save Button -->
+                                    <span class="flex justify-end px-4 py-2">
+                                        <button class="px-4 py-1 text-sm rounded-md font-medium bg-green-600 hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-green-500/50">
+                                            Save
+                                        </button>
+                                    </span>
+                            
+                                    <!-- Input and Translation Button -->
+                                    <div class="flex items-center gap-10">
+                                        <textarea
+                                            id="input-english"
+                                            placeholder="Type text here..."
+                                            class="w-full px-4 py-3 rounded-lg bg-slate-700 text-white"
+                                            rows="4"></textarea>
+                                        <button
+                                            id="translate-btn"
+                                            class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-blue-500/50">
+                                            Translate
+                                        </button>
+                                    </div>
+                            
+                                    <!-- Output -->
+                                    <div class="flex items-center gap-4">
+                                        <textarea
+                                            id="output-hebrew"
+                                            placeholder="Translation will appear here..."
+                                            class="w-full px-4 py-3 rounded-lg bg-slate-700 text-white"
+                                            rows="4"
+                                            readonly></textarea>
+                                        <div class="flex flex-col gap-2">
+                                            <button class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700">Audio</button>
+                                            <button class="px-4 py-2 bg-red-600 hover:bg-red-700 duplicate-btn">Create a New Sentence</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
+
+
+
+
+
+
     </main>
+    
 
-    <footer class="container mx-auto text-center py-4 dark:text-white">
-        © 2024 Hebrew Learning Hub. All rights reserved.
+
+    
+
+
+
+    <footer class="px-8 py-12 border-t border-gray-800">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">© 2024 Hebrew Learning Hub. All rights reserved.</p>
+        </div>
     </footer>
-
-    <!-- Scripts -->
     <script>
-        // Get user data from localStorage
-        const userName = localStorage.getItem('userName');
-        const userEmail = localStorage.getItem('userEmail');
 
-        // Set the values if they exist
-        if (userName) document.getElementById('name').value = userName;
-        if (userEmail) document.getElementById('email').value = userEmail;
 
-        function updateProfile() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const level = document.getElementById('level').value;
 
-            // Save to localStorage
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userLevel', level);
+// Handle duplication and clearing of containers
+document.getElementById('scrollable-container').addEventListener('click', function (e) {
+    if (e.target.classList.contains('duplicate-btn')) {
+        // Find the closest template container
+        const container = e.target.closest('.template-container');
+        if (container) {
+            // Clone the container
+            const newContainer = container.cloneNode(true);
 
-            alert('Profile updated successfully!');
+            // Clear input fields in the cloned container
+            const inputFields = newContainer.querySelectorAll('textarea, input');
+            inputFields.forEach(input => (input.value = ''));
+
+            // Prepend the cloned container to the scrollable section (insert at the top)
+            const scrollableSection = document.getElementById('scrollable-container');
+            scrollableSection.insertBefore(newContainer, scrollableSection.firstChild);
         }
-    </script>
+    }
+});
 
-    <script type="module">
-        import { ThemeManager } from './themeToggle.js';
-        document.addEventListener('DOMContentLoaded', () => {
-            new ThemeManager();
-        });
-    </script>
+ 
+ 
+ 
+         // Handle clearing of all duplicates
+         document.getElementById('clear-btn').addEventListener('click', function () {
+             const mainWrapper = document.getElementById('scrollable-container');
+             
+             // Keep only the first child (original content)
+             while (mainWrapper.children.length > 1) {
+                 mainWrapper.removeChild(mainWrapper.lastChild);
+             }
+ 
+             console.log('All duplicates cleared. Only the first tab remains.');
+         });
+ 
+ 
+ 
+
+
+ 
+     </script>
+      
+
 </body>
 </html>
