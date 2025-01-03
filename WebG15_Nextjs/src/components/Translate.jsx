@@ -1,13 +1,14 @@
-'use client'; // Ensure this is a client-side component in Next.js
+'use client';
 
 import { useState } from 'react';
-import { translateText } from '../utils/translationApi'; // Import the centralized translation API function
+import { translateText } from '../utils/translationApi';
 
 const Translate = ({ onWordSelection, onClear }) => {
   const [englishInput, setEnglishInput] = useState('');
   const [translation, setTranslation] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedWord, setSelectedWord] = useState('');
+  const [showGenerateButton, setShowGenerateButton] = useState(false);
 
   const handleTranslate = async () => {
     if (!englishInput.trim()) {
@@ -16,32 +17,64 @@ const Translate = ({ onWordSelection, onClear }) => {
     }
 
     setLoading(true);
-    const translatedText = await translateText(englishInput); // Use the centralized API
-    setTranslation(translatedText);
-    setLoading(false);
+    try {
+      const translatedText = await translateText(englishInput);
+      setTranslation(translatedText);
+      setShowGenerateButton(true);
+    } catch (error) {
+      console.error("Translation error:", error);
+      setTranslation("An error occurred during translation.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClear = () => {
-    setEnglishInput(''); // Clear the input field
-    setTranslation(''); // Clear the translation
-    setSelectedWord(''); // Clear the selected word
-    if (onClear) onClear(); // Notify parent to clear punctuations if onClear is provided
+    setEnglishInput('');
+    setTranslation('');
+    setSelectedWord('');
+    setShowGenerateButton(false);
+    if (onClear) onClear();
   };
 
   const handleWordClick = (word) => {
-    setSelectedWord(word); // Set the selected word
-    if (onWordSelection) onWordSelection([{ word, meaning: `Meaning of ${word}` }]); // Send to parent
+    setSelectedWord(word);
+    if (onWordSelection) onWordSelection([{ word, meaning: `Meaning of ${word}` }]);
   };
 
   const handlePlayPronunciation = () => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(translation);
-      utterance.lang = 'he-IL'; // Hebrew language
-      utterance.rate = 0.8; // Adjust the rate for clarity
+      utterance.lang = 'he-IL';
+      utterance.rate = 0.8;
       speechSynthesis.speak(utterance);
     } else {
       alert('Speech synthesis is not supported in your browser.');
     }
+  };
+
+  const handleSave = () => {
+    if (!translation) {
+      alert('Please translate a sentence first!');
+      return;
+    }
+    console.log('Saved translation:', translation); // Replace with actual save logic
+    // Example using localStorage:
+    // localStorage.setItem('savedTranslation', translation);
+  };
+
+  const handleGenerateNewSentence = async () => {
+      if (!translation) {
+        alert('Please translate a sentence first!');
+        return;
+      }
+      setEnglishInput(''); // Clear input field for new sentence
+      setTranslation(''); // Clear previous translation
+      setSelectedWord(''); // Clear selected word
+      setShowGenerateButton(false); // Hide button after generation
+      // Example placeholder - Replace with actual API call
+      const newSentence = "This is a new sentence to translate.";
+      setEnglishInput(newSentence);
   };
 
   return (
@@ -78,9 +111,7 @@ const Translate = ({ onWordSelection, onClear }) => {
             <span
               key={index}
               onClick={() => handleWordClick(word)}
-              className={`cursor-pointer px-1 rounded-md hover:text-blue-600 ${
-                word === selectedWord ? 'bg-yellow-200 dark:bg-yellow-600' : ''
-              }`}
+              className={`cursor-pointer px-1 rounded-md hover:text-blue-600 ${word === selectedWord ? 'bg-yellow-200 dark:bg-yellow-600' : ''}`}
             >
               {word}{' '}
             </span>
@@ -88,14 +119,32 @@ const Translate = ({ onWordSelection, onClear }) => {
         </div>
       )}
 
-      {translation && (
-        <button
-          onClick={handlePlayPronunciation}
-          className="mt-4 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
-        >
-          Play Pronunciation
-        </button>
-      )}
+      <div className="flex gap-4 mt-4">
+        {translation && (
+          <button
+            onClick={handlePlayPronunciation}
+            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
+          >
+            Play Pronunciation
+          </button>
+        )}
+        {translation && (
+          <button
+            onClick={handleSave}
+            className="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
+          >
+            Save
+          </button>
+        )}
+        {showGenerateButton && (
+          <button
+            onClick={handleGenerateNewSentence}
+            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
+          >
+            Generate a new sentence
+          </button>
+        )}
+      </div>
     </div>
   );
 };
