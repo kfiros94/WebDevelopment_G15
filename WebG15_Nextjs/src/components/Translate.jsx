@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { translateText } from '../utils/translationApi';
+import { auth } from "../utils/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 const Translate = ({ onWordSelection, onClear }) => {
   const [englishInput, setEnglishInput] = useState('');
@@ -9,6 +12,15 @@ const Translate = ({ onWordSelection, onClear }) => {
   const [loading, setLoading] = useState(false);
   const [selectedWord, setSelectedWord] = useState('');
   const [showGenerateButton, setShowGenerateButton] = useState(false);
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // Track the current user
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleTranslate = async () => {
     if (!englishInput.trim()) {
@@ -54,27 +66,33 @@ const Translate = ({ onWordSelection, onClear }) => {
   };
 
   const handleSave = () => {
+    if (!user) {
+      router.push("/signin"); // Redirect to sign-in page if not signed in
+      return;
+    }
     if (!translation) {
       alert('Please translate a sentence first!');
       return;
     }
     console.log('Saved translation:', translation); // Replace with actual save logic
-    // Example using localStorage:
-    // localStorage.setItem('savedTranslation', translation);
   };
 
   const handleGenerateNewSentence = async () => {
-      if (!translation) {
-        alert('Please translate a sentence first!');
-        return;
-      }
-      setEnglishInput(''); // Clear input field for new sentence
-      setTranslation(''); // Clear previous translation
-      setSelectedWord(''); // Clear selected word
-      setShowGenerateButton(false); // Hide button after generation
-      // Example placeholder - Replace with actual API call
-      const newSentence = "This is a new sentence to translate.";
-      setEnglishInput(newSentence);
+    if (!user) {
+      router.push("/signin"); // Redirect to sign-in page if not signed in
+      return;
+    }
+    if (!translation) {
+      alert('Please translate a sentence first!');
+      return;
+    }
+    setEnglishInput(''); // Clear input field for new sentence
+    setTranslation(''); // Clear previous translation
+    setSelectedWord(''); // Clear selected word
+    setShowGenerateButton(false); // Hide button after generation
+    // Example placeholder - Replace with actual API call
+    const newSentence = "This is a new sentence to translate.";
+    setEnglishInput(newSentence);
   };
 
   return (

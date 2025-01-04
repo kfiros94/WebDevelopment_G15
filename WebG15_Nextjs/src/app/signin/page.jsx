@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { auth, db } from "../../utils/firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 const SignInSignUp = () => {
@@ -28,21 +28,24 @@ const SignInSignUp = () => {
     e.preventDefault();
     setError("");
     setMessage("");
-  
+
     const { email, password } = formData;
-  
+
     try {
       if (isSignUp) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-  
+
         await setDoc(doc(db, "users", user.uid), {
           ...formData, // Save all the form data in Firestore
+          learningLevel: "Beginner", // Default learning level
         });
-  
-        setMessage("Account created successfully! You can now sign in.");
-        setIsSignUp(false);
-        setFormData({ email: "", password: "", username: "", firstName: "", lastName: "" });
+
+        // Immediately sign out after sign-up to require explicit sign-in
+        await signOut(auth);
+
+        setMessage("Account created successfully! Please sign in.");
+        setIsSignUp(false); // Switch to sign-in mode after account creation
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         setMessage("Sign-in successful! Redirecting...");
@@ -61,7 +64,6 @@ const SignInSignUp = () => {
       }
     }
   };
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-slate-900">

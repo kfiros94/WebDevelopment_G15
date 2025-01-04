@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar';
 import AccountMainTab from '../../components/AccountMainTab';
 import LearningStatistics from '../../components/LearningStatistics';
 import ProfileInformation from '../../components/ProfileInformation';
+import withAuth from "../../components/withAuth";
 
 const Account = () => {
   const [punctuations, setPunctuations] = useState([]);
@@ -55,4 +56,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default withAuth(Account); // Wrap the component with auth protection

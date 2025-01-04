@@ -1,9 +1,11 @@
 'use client'; // Ensures this is a client-side component
 
+import React from "react";
 import { useState, useEffect } from "react";
 import Translate from "../../components/Translate";
 import WordTable from "../../components/WordTable";
 import { translateText } from "../../utils/translationApi";
+import withAuth from "../../components/withAuth";
 
 const MyWords = () => {
   const [words, setWords] = useState(() => {
@@ -118,4 +120,4 @@ const MyWords = () => {
   );
 };
 
-export default MyWords;
+export default withAuth(MyWords); // Wrap the component with auth protection
