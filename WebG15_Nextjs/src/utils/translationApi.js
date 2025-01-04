@@ -1,6 +1,6 @@
 export const translateText = async (text, target = 'he') => {
   // Direct API Key usage
-  const apiKey = 'XXXXXXXXXXXXXXXXXXXX';//DONT PUSH TO GITHUB
+  const apiKey = 'XXXXXXX';//DONT PUSH TO GITHUB
 
   if (!apiKey) {
     console.error("API Key is missing. Please provide a valid API Key.");
