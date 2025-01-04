@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { auth, db } from "../utils/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 const ProfileInformation = () => {
   const [profile, setProfile] = useState({
-    name: 'John Doe',
-    email: 'john@example.com',
-    level: 'Beginner',
+    name: "",
+    email: "",
+    level: "Beginner",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setProfile({
+            name: `${userData.firstName} ${userData.lastName}`,
+            email: userData.email,
+            level: "Beginner", // Default level (can be updated)
+          });
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="col-span-1 bg-slate-800 dark:bg-gray-900 rounded-lg p-6 transition-all duration-300">
@@ -29,7 +43,7 @@ const ProfileInformation = () => {
             type="text"
             name="name"
             value={profile.name}
-            onChange={handleChange}
+            readOnly
             className="w-full p-2 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
           />
         </div>
@@ -41,7 +55,7 @@ const ProfileInformation = () => {
             type="email"
             name="email"
             value={profile.email}
-            onChange={handleChange}
+            readOnly
             className="w-full p-2 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
           />
         </div>
@@ -52,7 +66,12 @@ const ProfileInformation = () => {
           <select
             name="level"
             value={profile.level}
-            onChange={handleChange}
+            onChange={(e) =>
+              setProfile((prevProfile) => ({
+                ...prevProfile,
+                level: e.target.value,
+              }))
+            }
             className="w-full p-2 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
           >
             <option className="text-black dark:text-gray-300">Beginner</option>

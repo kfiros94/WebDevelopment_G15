@@ -28,29 +28,25 @@ const SignInSignUp = () => {
     e.preventDefault();
     setError("");
     setMessage("");
-
-    const { email, password, username, firstName, lastName } = formData;
-
+  
+    const { email, password } = formData;
+  
     try {
       if (isSignUp) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
+  
         await setDoc(doc(db, "users", user.uid), {
-          username,
-          firstName,
-          lastName,
-          email,
-          password,
+          ...formData, // Save all the form data in Firestore
         });
-
+  
         setMessage("Account created successfully! You can now sign in.");
         setIsSignUp(false);
         setFormData({ email: "", password: "", username: "", firstName: "", lastName: "" });
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         setMessage("Sign-in successful! Redirecting...");
-        router.push("/"); // Redirect to the main page
+        router.push("/account"); // Redirect to account page
       }
     } catch (err) {
       switch (err.code) {
@@ -60,17 +56,12 @@ const SignInSignUp = () => {
         case "auth/wrong-password":
           setError("Incorrect password. Please try again.");
           break;
-        case "auth/invalid-email":
-          setError("Invalid email format. Please check and try again.");
-          break;
-        case "auth/invalid-credential":
-          setError("Invalid credentials. Please ensure your email and password are correct.");
-          break;
         default:
           setError("An error occurred: " + err.message);
       }
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-slate-900">
