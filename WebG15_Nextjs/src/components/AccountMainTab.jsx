@@ -1,8 +1,25 @@
 import '../styles/globals.css';
 import React, { useEffect, useState } from 'react';
 import { translateText } from '../utils/translationApi'; // Import your translation API function
+import { auth, db } from '../utils/firebaseConfig'; // Firebase and Firestore configuration
+import { doc, setDoc, arrayUnion } from 'firebase/firestore';
 
 const AccountMainTab = () => {
+  const [userEmail, setUserEmail] = useState(null); // Track the logged-in user's email
+
+  useEffect(() => {
+    // Listen to auth state changes and get the user's email
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserEmail(user.email); // Set the logged-in user's email
+      } else {
+        setUserEmail(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     const mainWrapper = document.getElementById('main-wrapper');
     const clearBtn = document.getElementById('clear-btn');
@@ -12,12 +29,17 @@ const AccountMainTab = () => {
       return;
     }
 
-    // Function to attach translate functionality to all Translate buttons
     const attachTranslateFunctionality = () => {
       const translateButtons = mainWrapper.querySelectorAll('#translate-btn');
       translateButtons.forEach((btn) => {
         btn.removeEventListener('click', handleTranslate); // Avoid duplicate listeners
         btn.addEventListener('click', handleTranslate);
+      });
+
+      const audioButtons = mainWrapper.querySelectorAll('#audio-btn');
+      audioButtons.forEach((btn) => {
+        btn.removeEventListener('click', handlePlayPronunciation); // Avoid duplicate listeners
+        btn.addEventListener('click', handlePlayPronunciation);
       });
     };
 
@@ -97,6 +119,74 @@ const AccountMainTab = () => {
     }
   };
 
+  // Function to play Hebrew pronunciation
+  const handlePlayPronunciation = (e) => {
+    const container = e.target.closest('.template-container'); // Identify the specific container
+    const outputField = container.querySelector('#output-hebrew');
+
+    if (!outputField) {
+      console.warn('Output field not found.');
+      return;
+    }
+
+    const translation = outputField.value.trim();
+
+    if (!translation) {
+      alert('No translation available to play.');
+      return;
+    }
+
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(translation);
+      utterance.lang = 'he-IL'; // Set the language to Hebrew
+      utterance.rate = 0.8; // Adjust the speaking rate
+      speechSynthesis.speak(utterance);
+    } else {
+      alert('Speech synthesis is not supported in your browser.');
+    }
+  };
+
+  // Function to handle saving sentences to Firestore
+  const handleSave = async (e) => {
+    if (!userEmail) {
+      alert('You must be logged in to save sentences.');
+      return;
+    }
+
+    const container = e.target.closest('.template-container'); // Identify the specific container
+    const inputField = container.querySelector('#input-english');
+    const outputField = container.querySelector('#output-hebrew');
+
+    if (!inputField || !outputField) {
+      console.warn('Input or output fields not found.');
+      return;
+    }
+
+    const englishSentence = inputField.value.trim();
+    const translatedSentence = outputField.value.trim();
+
+    if (!englishSentence || !translatedSentence) {
+      alert('Both the English sentence and its translation must be provided.');
+      return;
+    }
+
+    try {
+      const userDocRef = doc(db, 'userSavedLists', userEmail); // Reference the document by email
+      await setDoc(
+        userDocRef,
+        {
+          sentencesList: arrayUnion(`${englishSentence} -> ${translatedSentence}`), // Append to the array
+        },
+        { merge: true } // Merge with existing data
+      );
+
+      alert('Sentence saved successfully!');
+    } catch (error) {
+      console.error('Error saving sentence:', error);
+      alert('An error occurred while saving the sentence. Please try again.');
+    }
+  };
+
   return (
     <div className="col-span-3 bg-slate-800 dark:bg-gray-900 rounded-lg p-6 transition-all duration-300">
       <div className="flex justify-end">
@@ -133,7 +223,10 @@ const AccountMainTab = () => {
           >
             <div className="flex flex-col gap-4">
               <span className="flex justify-end px-4 py-2">
-                <button className="px-4 py-1 text-sm rounded-md font-medium bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 transition-all duration-300">
+                <button
+                  className="px-4 py-1 text-sm rounded-md font-medium bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 transition-all duration-300"
+                  onClick={handleSave} // Attach save functionality
+                >
                   Save
                 </button>
               </span>
@@ -160,7 +253,10 @@ const AccountMainTab = () => {
                   rows="4"
                 ></textarea>
                 <div className="flex flex-col gap-2">
-                  <button className="px-4 py-2 bg-yellow-600 dark:bg-yellow-700 hover:bg-yellow-700 dark:hover:bg-yellow-800 transition-all duration-300">
+                  <button
+                    id="audio-btn"
+                    className="px-4 py-2 bg-yellow-600 dark:bg-yellow-700 hover:bg-yellow-700 dark:hover:bg-yellow-800 transition-all duration-300"
+                  >
                     Audio
                   </button>
                   <button className="px-4 py-2 bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 duplicate-btn transition-all duration-300">
