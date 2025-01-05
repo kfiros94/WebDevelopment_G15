@@ -4,7 +4,8 @@ export default {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}", // Scan all app files
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}", // Scan all components
-    "./src/styles/**/*.{css}", // Scan styles folder for classes
+    "./src/styles/**/*.css",
+ // Scan styles folder for classes
   ],
   theme: {
     extend: {
