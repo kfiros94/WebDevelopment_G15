@@ -9,21 +9,19 @@ const WordTable = ({ words, onDelete, onPlayAudio }) => {
             <th className="p-4 text-left">English</th>
             <th className="p-4 text-left">Hebrew</th>
             <th className="p-4 text-left">Pronunciation</th>
-            <th className="p-4 text-left">Translation</th>
             <th className="p-4 text-left">Audio</th>
             <th className="p-4 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
           {words.map((word, index) => (
-            <tr
-              key={index}
-              className="border-b border-slate-600"
-            >
+            <tr key={index} className="border-b border-slate-600">
               <td className="p-4">{word.english}</td>
               <td className="p-4">{word.hebrew}</td>
-              <td className="p-4">{word.pronunciation}</td>
-              <td className="p-4">{word.translation}</td>
+              {/* Ensure pronunciation displays transliteration or fallback */}
+              <td className="p-4">
+                {word.pronunciation || 'Pronunciation not available'}
+              </td>
               <td className="p-4">
                 <button
                   onClick={() => onPlayAudio(word.hebrew)}

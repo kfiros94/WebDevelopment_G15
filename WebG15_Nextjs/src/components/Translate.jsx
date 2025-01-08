@@ -1,23 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { translateText } from '../utils/translationApi';
-import { auth } from "../utils/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
+import { auth, db } from '../utils/firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+import { collection, addDoc } from 'firebase/firestore'; // Firestore imports
 
 const Translate = ({ onWordSelection, onClear }) => {
   const [englishInput, setEnglishInput] = useState('');
   const [translation, setTranslation] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedWord, setSelectedWord] = useState('');
-  const [showGenerateButton, setShowGenerateButton] = useState(false);
   const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // Track the current user
+      setUser(currentUser);
     });
     return () => unsubscribe();
   }, []);
@@ -30,12 +29,19 @@ const Translate = ({ onWordSelection, onClear }) => {
 
     setLoading(true);
     try {
-      const translatedText = await translateText(englishInput);
-      setTranslation(translatedText);
-      setShowGenerateButton(true);
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: englishInput, target: 'he' }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setTranslation(data.translatedText);
     } catch (error) {
-      console.error("Translation error:", error);
-      setTranslation("An error occurred during translation.");
+      console.error('Translation error:', error);
+      setTranslation('An error occurred while translating.');
     } finally {
       setLoading(false);
     }
@@ -45,7 +51,6 @@ const Translate = ({ onWordSelection, onClear }) => {
     setEnglishInput('');
     setTranslation('');
     setSelectedWord('');
-    setShowGenerateButton(false);
     if (onClear) onClear();
   };
 
@@ -55,7 +60,7 @@ const Translate = ({ onWordSelection, onClear }) => {
   };
 
   const handlePlayPronunciation = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(translation);
       utterance.lang = 'he-IL';
       utterance.rate = 0.8;
@@ -65,34 +70,29 @@ const Translate = ({ onWordSelection, onClear }) => {
     }
   };
 
-  const handleSave = () => {
+  const handleSaveToFirebase = async () => {
     if (!user) {
-      router.push("/signin"); // Redirect to sign-in page if not signed in
+      router.push('/signin'); // Redirect to sign-in page if user is not signed in
       return;
     }
-    if (!translation) {
-      alert('Please translate a sentence first!');
-      return;
-    }
-    console.log('Saved translation:', translation); // Replace with actual save logic
-  };
 
-  const handleGenerateNewSentence = async () => {
-    if (!user) {
-      router.push("/signin"); // Redirect to sign-in page if not signed in
-      return;
-    }
     if (!translation) {
       alert('Please translate a sentence first!');
       return;
     }
-    setEnglishInput(''); // Clear input field for new sentence
-    setTranslation(''); // Clear previous translation
-    setSelectedWord(''); // Clear selected word
-    setShowGenerateButton(false); // Hide button after generation
-    // Example placeholder - Replace with actual API call
-    const newSentence = "This is a new sentence to translate.";
-    setEnglishInput(newSentence);
+
+    try {
+      const userCollectionRef = collection(db, 'userSavedList', user.uid, 'sentences');
+      await addDoc(userCollectionRef, {
+        englishSentence: englishInput,
+        translatedSentence: translation,
+        timestamp: new Date(),
+      });
+      alert('Translation saved successfully!');
+    } catch (error) {
+      console.error('Error saving to Firestore:', error);
+      alert('Failed to save the translation.');
+    }
   };
 
   return (
@@ -129,7 +129,9 @@ const Translate = ({ onWordSelection, onClear }) => {
             <span
               key={index}
               onClick={() => handleWordClick(word)}
-              className={`cursor-pointer px-1 rounded-md hover:text-blue-600 ${word === selectedWord ? 'bg-yellow-200 dark:bg-yellow-600' : ''}`}
+              className={`cursor-pointer px-1 rounded-md hover:text-blue-600 ${
+                word === selectedWord ? 'bg-yellow-200 dark:bg-yellow-600' : ''
+              }`}
             >
               {word}{' '}
             </span>
@@ -148,18 +150,10 @@ const Translate = ({ onWordSelection, onClear }) => {
         )}
         {translation && (
           <button
-            onClick={handleSave}
+            onClick={handleSaveToFirebase}
             className="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
           >
-            Save
-          </button>
-        )}
-        {showGenerateButton && (
-          <button
-            onClick={handleGenerateNewSentence}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
-          >
-            Generate a new sentence
+            Save to Firestore
           </button>
         )}
       </div>

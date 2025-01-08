@@ -5,14 +5,15 @@ import { getAuth } from "firebase/auth"; // Import Authentication
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDgT2wIQWbmgx46DFWcmnpyZu32uBwwOZg",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: "web-g15.firebaseapp.com",
   projectId: "web-g15",
-  storageBucket: "web-g15.appspot.com", // Corrected storageBucket URL
+  storageBucket: "web-g15.appspot.com",
   messagingSenderId: "431260704833",
   appId: "1:431260704833:web:7ed4fc9bb84ba860d926c0",
   measurementId: "G-NEMF7FBLQF",
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
