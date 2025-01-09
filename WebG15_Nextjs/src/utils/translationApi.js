@@ -1,38 +1,24 @@
-export const translateText = async (text, target = 'he') => {
-  // Direct API Key usage
-  const apiKey = 'AIzaSyCKGeSBMG_wrhS0aCm-zoGdV3sp4uMipAY';//DONT PUSH TO GITHUB
-
-  if (!apiKey) {
-    console.error("API Key is missing. Please provide a valid API Key.");
-    return "Translation service is unavailable.";
-  }
-
+export const translateText = async (text, target = "he") => {
   if (!text.trim()) {
-    return 'Please enter a sentence to translate.';
+    return "Please enter a sentence to translate.";
   }
 
   try {
-    const response = await fetch(
-      `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          q: text,
-          target,
-        }),
-      }
-    );
+    const response = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, target }),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error?.message || `Error: ${response.status}`);
+      throw new Error(errorData.error || `Error: ${response.status}`);
     }
 
     const data = await response.json();
-    return data?.data?.translations[0]?.translatedText || "No translation available.";
+    return data.translatedText || "No translation available.";
   } catch (error) {
     console.error("Translation error:", error);
-    return 'Failed to fetch translation. Please try again later.';
+    return "Failed to fetch translation. Please try again later.";
   }
 };
