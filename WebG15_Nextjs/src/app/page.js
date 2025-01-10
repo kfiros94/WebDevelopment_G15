@@ -1,10 +1,8 @@
-// src/app/page.js
 "use client"
-import { useState, useRef, useEffect } from "react" // Add this import
+import { useState, useRef, useEffect } from "react"
 import Translate from "../components/Translate"
 import PunctuationList from "../components/PunctuationList"
-import HeroCarousel from "@/components/HeroCarousel";
-
+import HeroCarousel from "@/components/HeroCarousel"
 
 export default function Home() {
     const [punctuations, setPunctuations] = useState([])
@@ -19,7 +17,6 @@ export default function Home() {
         setPunctuations([])
     }
 
-    // Observe when the Featured Content Section comes into view
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -27,7 +24,7 @@ export default function Home() {
                     setIsVisible(true) // Set visible when in view
                 }
             },
-            { threshold: 0.1 }, // Trigger when 10% of the section is visible
+            { threshold: 0.1 },
         )
 
         if (featuredRef.current) {
@@ -43,7 +40,6 @@ export default function Home() {
 
     return (
         <div className="flex flex-col gap-12 bg-gray-100 dark:bg-slate-900 min-h-screen">
-            
             {/* Hero Section */}
             <HeroCarousel />
 
@@ -51,10 +47,7 @@ export default function Home() {
             <div className="max-w-6xl mx-auto p-6 grid grid-cols-4 gap-6">
                 {/* Left Column: Punctuation List */}
                 <div className="col-span-1">
-                    <PunctuationList
-                        punctuations={punctuations}
-                        onSelect={(p) => console.log(`Selected: ${p.word}`)} // Handle selection logic here
-                    />
+                    <PunctuationList punctuations={punctuations} onSelect={(p) => console.log(`Selected: ${p.word}`)} />
                 </div>
 
                 {/* Main Content: Translate Component */}
@@ -62,7 +55,6 @@ export default function Home() {
                     <Translate onWordSelection={handleWordSelection} onClear={clearPunctuationList} />
                 </div>
             </div>
-
             {/* Featured Content Section */}
             <section
                 ref={featuredRef}
@@ -93,6 +85,30 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+            {/* Testimonial Section */}
+            <section className="bg-gray-50 dark:bg-slate-800 py-12">
+                <div className="max-w-4xl mx-auto text-center px-6">
+                    <blockquote className="text-xl sm:text-2xl italic text-gray-700 dark:text-gray-300 mb-8">
+                        "Our mission is to make learning Hebrew engaging and effective. We’ve built a platform where learners can save their
+                        favorite words, practice essential phrases, and track their progress with ease."
+                    </blockquote>
+                    <div className="flex flex-col items-center">
+                        <img src="/Kfir.jpeg" alt="Kfir Amoyal" className="w-20 h-20 rounded-full object-cover border-4 border-blue-600" />
+                        <p className="mt-2 font-semibold">Kfir Amoyal</p>
+                    </div>
+                </div>
+                <div className="flex flex-col items-center">
+                    <h2>Trusted By</h2>
+                </div>
+                {/* Brand Logos */}
+                <div className="mt-8 flex justify-center gap-8">
+                    <img src="/braude.png" alt="braude" className="h-8" />
+                    <img src="/google_cloud.png" alt="google" className="h-8" />
+                    <img src="/next.png" alt="Next.js" className="h-8" />
+                    <img src="/Firebase_logo.png" alt="fire_base" className="h-8" />
+                </div>
+            </section>
         </div>
     )
 }
+

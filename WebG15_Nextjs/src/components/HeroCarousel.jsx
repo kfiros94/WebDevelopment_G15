@@ -4,17 +4,54 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { useEffect, useState } from "react";
+import { auth } from "../utils/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 const HeroCarousel = () => {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  // Check if user is signed in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // Store user if signed in
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleJoinUsClick = () => {
+    if (!user) {
+      router.push("/signin"); // Redirect to sign-in if user is not signed in
+    }
+  };
+
+  const handleGoToAccountClick = () => {
+    if (user) {
+      router.push("/account"); // Redirect to account page if signed in
+    } else {
+      router.push("/signin"); // Redirect to sign-in page if not signed in
+    }
+  };
+
+  const handleTestYourselfClick = () => {
+    if (user) {
+      router.push("/quiz"); // Redirect to quiz page if signed in
+    } else {
+      router.push("/signin"); // Redirect to sign-in page if not signed in
+    }
+  };
+
   return (
     <section className="w-full">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         navigation
         pagination={{ clickable: true }}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        autoplay={{ delay: 8000, disableOnInteraction: false }} // Slower autoplay (8 seconds)
         loop
-        className="max-w-6xl mx-auto" // Increased width from max-w-4xl to max-w-6xl
+        className="max-w-6xl mx-auto"
       >
         {/* Slide 1 */}
         <SwiperSlide>
@@ -27,7 +64,10 @@ const HeroCarousel = () => {
                 Your journey to Hebrew fluency starts here.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button className="px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+                <button
+                  className="px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+                  onClick={handleJoinUsClick}
+                >
                   Join Us Today!
                 </button>
                 <button className="px-6 py-3 border border-white text-blue-800 rounded-lg hover:bg-blue-500 transition-all duration-300 transform hover:scale-105">
@@ -70,7 +110,10 @@ const HeroCarousel = () => {
               Take control of your Hebrew learning experience by saving the words and phrases that matter most to you. Create a personalized vocabulary list and watch your Hebrew skills grow!
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-6 py-3 border bg-blue-400 border-gray-300 dark:border-gray-600 text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black transition-all duration-300 transform hover:scale-105">
+              <button
+                className="px-6 py-3 border bg-blue-400 border-gray-300 dark:border-gray-600 text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black transition-all duration-300 transform hover:scale-105"
+                onClick={handleGoToAccountClick}
+              >
                 Go To My Account
               </button>
             </div>
@@ -91,7 +134,10 @@ const HeroCarousel = () => {
               Improve your language skills while having fun.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+              <button
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                onClick={handleTestYourselfClick} // Redirect based on user status
+              >
                 Test Yourself
               </button>
               <button className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-white rounded-lg hover:bg-gray-100 hover:text-black dark:hover:bg-gray-800 transition-all duration-300 transform hover:scale-105">
@@ -106,3 +152,4 @@ const HeroCarousel = () => {
 };
 
 export default HeroCarousel;
+
