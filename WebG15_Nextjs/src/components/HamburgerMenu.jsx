@@ -52,6 +52,13 @@ const HamburgerMenu = ({ user, handleSignOut }) => {
                 </ListItemButton>
               </Link>
             </ListItem>
+            <ListItem disablePadding>
+              <Link href="/quiz" passHref>
+                <ListItemButton onClick={toggleDrawer(false)}>
+                  <ListItemText primary="Quiz" />
+                </ListItemButton>
+              </Link>
+            </ListItem>
 
             {/* Sign In/Sign Out Button */}
             <ListItem disablePadding>
