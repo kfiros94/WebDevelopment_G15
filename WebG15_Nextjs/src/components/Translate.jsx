@@ -1,16 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { auth, db } from '../utils/firebaseConfig';
-import { onAuthStateChanged } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore'; // Firestore imports
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { auth } from "../utils/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Translate = ({ onWordSelection, onClear }) => {
-  const [englishInput, setEnglishInput] = useState('');
-  const [translation, setTranslation] = useState('');
+  const [englishInput, setEnglishInput] = useState("");
+  const [translation, setTranslation] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedWord, setSelectedWord] = useState('');
+  const [selectedWord, setSelectedWord] = useState("");
   const [user, setUser] = useState(null);
   const router = useRouter();
 
@@ -23,16 +22,16 @@ const Translate = ({ onWordSelection, onClear }) => {
 
   const handleTranslate = async () => {
     if (!englishInput.trim()) {
-      setTranslation('Please enter a sentence to translate.');
+      setTranslation("Please enter a sentence to translate.");
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch('/api/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: englishInput, target: 'he' }),
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: englishInput, target: "he" }),
       });
       const data = await res.json();
       if (data.error) {
@@ -40,17 +39,17 @@ const Translate = ({ onWordSelection, onClear }) => {
       }
       setTranslation(data.translatedText);
     } catch (error) {
-      console.error('Translation error:', error);
-      setTranslation('An error occurred while translating.');
+      console.error("Translation error:", error);
+      setTranslation("An error occurred while translating.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleClear = () => {
-    setEnglishInput('');
-    setTranslation('');
-    setSelectedWord('');
+    setEnglishInput("");
+    setTranslation("");
+    setSelectedWord("");
     if (onClear) onClear();
   };
 
@@ -60,38 +59,13 @@ const Translate = ({ onWordSelection, onClear }) => {
   };
 
   const handlePlayPronunciation = () => {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(translation);
-      utterance.lang = 'he-IL';
+      utterance.lang = "he-IL";
       utterance.rate = 0.8;
       speechSynthesis.speak(utterance);
     } else {
-      alert('Speech synthesis is not supported in your browser.');
-    }
-  };
-
-  const handleSaveToFirebase = async () => {
-    if (!user) {
-      router.push('/signin'); // Redirect to sign-in page if user is not signed in
-      return;
-    }
-
-    if (!translation) {
-      alert('Please translate a sentence first!');
-      return;
-    }
-
-    try {
-      const userCollectionRef = collection(db, 'userSavedList', user.uid, 'sentences');
-      await addDoc(userCollectionRef, {
-        englishSentence: englishInput,
-        translatedSentence: translation,
-        timestamp: new Date(),
-      });
-      alert('Translation saved successfully!');
-    } catch (error) {
-      console.error('Error saving to Firestore:', error);
-      alert('Failed to save the translation.');
+      alert("Speech synthesis is not supported in your browser.");
     }
   };
 
@@ -113,7 +87,7 @@ const Translate = ({ onWordSelection, onClear }) => {
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
           disabled={loading}
         >
-          {loading ? 'Translating...' : 'Translate'}
+          {loading ? "Translating..." : "Translate"}
         </button>
         <button
           onClick={handleClear}
@@ -125,15 +99,15 @@ const Translate = ({ onWordSelection, onClear }) => {
 
       {translation && (
         <div className="mt-4 text-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600">
-          {translation.split(' ').map((word, index) => (
+          {translation.split(" ").map((word, index) => (
             <span
               key={index}
               onClick={() => handleWordClick(word)}
               className={`cursor-pointer px-1 rounded-md hover:text-blue-600 ${
-                word === selectedWord ? 'bg-yellow-200 dark:bg-yellow-600' : ''
+                word === selectedWord ? "bg-yellow-200 dark:bg-yellow-600" : ""
               }`}
             >
-              {word}{' '}
+              {word}{" "}
             </span>
           ))}
         </div>
@@ -146,14 +120,6 @@ const Translate = ({ onWordSelection, onClear }) => {
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
           >
             Play Pronunciation
-          </button>
-        )}
-        {translation && (
-          <button
-            onClick={handleSaveToFirebase}
-            className="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
-          >
-            Save to Firestore
           </button>
         )}
       </div>
