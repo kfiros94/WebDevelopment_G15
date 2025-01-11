@@ -1,26 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { auth, db } from '../utils/firebaseConfig';
+import { auth } from '../utils/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore'; // Firestore imports
-import { translateText } from '../utils/translationApi'; // Import the translateText function
+import { translateText } from '../utils/translationApi';
 
-const Translate = ({ onWordSelection, onClear }) => {
+const Translate = ({ onTranslationComplete, onWordSelection, onClear }) => {
   const [englishInput, setEnglishInput] = useState('');
   const [translation, setTranslation] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedWord, setSelectedWord] = useState('');
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
 
   const handleTranslate = async () => {
     if (!englishInput.trim()) {
@@ -30,9 +19,13 @@ const Translate = ({ onWordSelection, onClear }) => {
 
     setLoading(true);
     try {
-      // Use translateText instead of manual fetch
       const translatedText = await translateText(englishInput, 'he');
       setTranslation(translatedText);
+
+      // Pass the full sentence and translation to parent
+      if (onTranslationComplete) {
+        onTranslationComplete(englishInput, translatedText);
+      }
     } catch (error) {
       console.error('Translation error:', error);
       setTranslation('An error occurred while translating.');
@@ -65,35 +58,29 @@ const Translate = ({ onWordSelection, onClear }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg flex-1 transition-all duration-300 hover:shadow-xl">
-      <h2 className="text-2xl font-bold mt-6 mb-6 text-gray-800 dark:text-white">
-        Translate English to Hebrew
-      </h2>
+    <div className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-lg flex-1">
+      <h2 className="text-2xl font-bold mt-6 mb-6">Translate English to Hebrew</h2>
       <input
         type="text"
         value={englishInput}
         onChange={(e) => setEnglishInput(e.target.value)}
         placeholder="Type your sentence here..."
-        className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg transition-all duration-300"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
       />
       <div className="flex gap-4 mt-4">
         <button
           onClick={handleTranslate}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           disabled={loading}
         >
           {loading ? 'Translating...' : 'Translate'}
         </button>
-        <button
-          onClick={handleClear}
-          className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
-        >
+        <button onClick={handleClear} className="px-6 py-3 bg-gray-600 text-white rounded-lg">
           Clear
         </button>
       </div>
-
       {translation && (
-        <div className="mt-4 text-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600">
+        <div className="mt-4 text-lg bg-gray-100 p-4 rounded-lg text-gray-800 dark:bg-slate-700 dark:text-white">
           {translation.split(' ').map((word, index) => (
             <span
               key={index}
@@ -107,17 +94,16 @@ const Translate = ({ onWordSelection, onClear }) => {
           ))}
         </div>
       )}
-
-      <div className="flex gap-4 mt-4">
-        {translation && (
+      {translation && (
+        <div className="flex gap-4 mt-4">
           <button
             onClick={handlePlayPronunciation}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg active:scale-95"
+            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
           >
             Play Pronunciation
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
