@@ -74,7 +74,7 @@ const MyWords = () => {
   };
 
   const handleAddWords = async () => {
-    if (highlightedWords.length === 0) return;
+    if (highlightedWords.length === 0) return; // No words selected
   
     const newWords = await Promise.all(
       highlightedWords.map(async (word) => ({
@@ -85,8 +85,9 @@ const MyWords = () => {
       }))
     );
   
-    const updatedWords = [...words, ...newWords]; // Correctly append new words
-    setWords(updatedWords); // Update the state
+    const updatedWords = [...words, ...newWords]; // Append only the new words
+    setWords(updatedWords); // Update state with new words
+    setHighlightedWords([]); // Clear highlighted words after saving
   
     if (userEmail) {
       const docRef = doc(db, "userSavedLists", userEmail);
@@ -95,13 +96,14 @@ const MyWords = () => {
       if (docSnap.exists()) {
         const currentData = docSnap.data().sentencesList || [];
         const updatedSentencesList = [
-          ...currentData, // Add existing Firestore list
-          ...newWords.map((w) => `${w.english} -> ${w.hebrew}`),
+          ...currentData, // Existing data from Firestore
+          ...newWords.map((w) => `${w.english} -> ${w.hebrew}`), // New words only
         ];
         await updateDoc(docRef, { sentencesList: updatedSentencesList });
       }
     }
   };
+  
   
   const handleAddSentence = async () => {
     if (!translatedSentence || !englishSentence) return;
@@ -131,21 +133,28 @@ const MyWords = () => {
   
 
   const deleteWord = async (index, type) => {
-    let updatedList;
+    let updatedWords = [...words]; // Create copies of words and sentences
+    let updatedSentences = [...sentences];
+  
     if (type === "word") {
-      updatedList = words.filter((_, i) => i !== index);
-      setWords(updatedList);
+      updatedWords = updatedWords.filter((_, i) => i !== index); // Remove the selected word
+      setWords(updatedWords);
     } else {
-      updatedList = sentences.filter((_, i) => i !== index);
-      setSentences(updatedList);
+      updatedSentences = updatedSentences.filter((_, i) => i !== index); // Remove the selected sentence
+      setSentences(updatedSentences);
     }
-
+  
     if (userEmail) {
       const docRef = doc(db, "userSavedLists", userEmail);
-      const updatedSentencesList = [...updatedList].map((w) => `${w.english} -> ${w.hebrew}`);
-      await updateDoc(docRef, { sentencesList: updatedSentencesList });
+      const updatedSentencesList = [
+        ...updatedWords.map((w) => `${w.english} -> ${w.hebrew}`),
+        ...updatedSentences.map((s) => `${s.english} -> ${s.hebrew}`),
+      ]; // Combine both words and sentences
+  
+      await updateDoc(docRef, { sentencesList: updatedSentencesList }); // Update Firestore
     }
   };
+  
 
   const playAudio = (text) => {
     if ("speechSynthesis" in window) {
