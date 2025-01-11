@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
 
 :root {
   --background: #ffffff;
@@ -24,3 +25,15 @@ body {
 .font-cursive {
   font-family: 'Dancing Script', cursive;
 }
+.trusted-by-heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  background: linear-gradient(90deg, #22c55e, #3b82f6);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  font-size: 1.75rem; /* Increased font size */
+}
+

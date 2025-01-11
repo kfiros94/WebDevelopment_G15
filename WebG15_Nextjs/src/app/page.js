@@ -86,20 +86,51 @@ export default function Home() {
                 </div>
             </section>
             {/* Testimonial Section */}
-            <section className="bg-gray-50 dark:bg-slate-800 py-12">
-                <div className="max-w-4xl mx-auto text-center px-6">
+            <section className="bg-gray-50 dark:bg-slate-800 py-12 text-center">
+            <div className="max-w-4xl mx-auto text-center px-6">
                     <blockquote className="text-xl sm:text-2xl italic text-gray-700 dark:text-gray-300 mb-8">
                         "Our mission is to make learning Hebrew engaging and effective. We’ve built a platform where learners can save their
                         favorite words, practice essential phrases, and track their progress with ease."
                     </blockquote>
-                    <div className="flex flex-col items-center">
-                        <img src="/Kfir.jpeg" alt="Kfir Amoyal" className="w-20 h-20 rounded-full object-cover border-4 border-blue-600" />
-                        <p className="mt-2 font-semibold">Kfir Amoyal</p>
+
+                    {/* Testimonial Images in a Row */}
+                    <div className="flex justify-around gap-8 mt-6 w-full px-6">
+                        <div className="flex flex-col items-center">
+                            <img
+                                src="/Kfir.jpeg"
+                                alt="Kfir Amoyal"
+                                className="w-20 h-20 rounded-full object-cover border-4 border-blue-600"
+                            />
+                            <p className="mt-2 font-semibold">Kfir Amoyal</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <img
+                                src="/Fatmeh.png"
+                                alt="User 2"
+                                className="w-20 h-20 rounded-full object-cover border-4 border-purple-600"
+                            />
+                            <p className="mt-2 font-semibold">Fatmeh Zoabi</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <img
+                                src="/israelOhayon.png"
+                                alt="User 1"
+                                className="w-20 h-20 rounded-full object-cover border-4 border-green-600"
+                            />
+                            <p className="mt-2 font-semibold">Israel Ohayon</p>
+                        </div>
+
+                        <div className="flex flex-col items-center">
+                            <img src="/vladi.png" alt="User 3" className="w-20 h-20 rounded-full object-cover border-4 border-red-600" />
+                            <p className="mt-2 font-semibold">Vladi Trinter</p>
+                        </div>
                     </div>
                 </div>
-                <div className="flex flex-col items-center">
-                    <h2>Trusted By</h2>
+
+                <div className="flex flex-col items-center mt-8">
+                    <h2 className="trusted-by-heading">Trusted By</h2>
                 </div>
+
                 {/* Brand Logos */}
                 <div className="mt-8 flex justify-center gap-8">
                     <img src="/braude.png" alt="braude" className="h-8" />
