@@ -1,17 +1,18 @@
 import { TrashIcon, SpeakerWaveIcon } from "@heroicons/react/24/outline"; // Importing icons
 import { motion, AnimatePresence } from "framer-motion"; // For animations
+import { Box, Typography, Paper } from "@mui/material";
 
 const WordTable = ({ words, onDelete, onPlayAudio }) => {
   return (
-    <div className="mt-8 bg-slate-800 rounded-lg overflow-x-auto shadow-lg">
+    <div className="mt-8 bg-slate-800 rounded-lg shadow-lg p-4">
       <table className="w-full border-collapse">
-        <thead className="bg-slate-700">
-          <tr className="border-b border-slate-600">
-            <th className="p-4 text-left text-yellow-400 text-lg">English</th>
-            <th className="p-4 text-left text-yellow-400 text-lg">Hebrew</th>
-            <th className="p-4 text-left text-yellow-400 text-lg">Pronunciation</th>
-            <th className="p-4 text-left text-yellow-400 text-lg">Audio</th>
-            <th className="p-4 text-left text-yellow-400 text-lg">Actions</th>
+        <thead className="bg-slate-800">
+          <tr className="border-b border-slate-600 text-yellow-600">
+            <th className="p-4 text-left text-lg">English</th>
+            <th className="p-4 text-left text-lg">Hebrew</th>
+            <th className="p-4 text-left text-lg">Pronunciation</th>
+            <th className="p-4 text-left text-lg">Audio</th>
+            <th className="p-4 text-left text-lg">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -22,7 +23,9 @@ const WordTable = ({ words, onDelete, onPlayAudio }) => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: -50 }}
-                className="border-b border-slate-600 transition hover:bg-slate-700"
+                className={`border-b border-slate-600 ${
+                  index % 2 === 0 ? "bg-slate-700" : "bg-slate-800"
+                } hover:none`}
               >
                 <td className="p-4 text-white text-lg">{word.english}</td>
                 <td className="p-4 text-white text-lg">{word.hebrew}</td>
