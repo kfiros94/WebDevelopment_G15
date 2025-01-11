@@ -1,8 +1,8 @@
 import '../styles/globals.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { translateText } from '../utils/translationApi'; 
 import { auth, db } from '../utils/firebaseConfig';
-import { doc, setDoc, arrayUnion } from 'firebase/firestore';
+import { doc, setDoc, arrayUnion, collection, getDocs } from 'firebase/firestore';
 
 // Default punctuation marks for letters without constraints
 const punctuationMarks = [
@@ -54,11 +54,24 @@ function addRandomPunctuation(hebrewWord) {
 
 const AccountMainTab = () => {
   const [userEmail, setUserEmail] = useState(null);
+  const [collectWords, setCollectWords] = useState({}); // State for collectWords
+  const collectWordsRef = useRef(collectWords); // Ref to hold latest collectWords
 
   useEffect(() => {
-    if (auth.currentUser) {
-      setUserEmail(auth.currentUser.email);
-    }
+    // Update ref whenever collectWords state changes
+    collectWordsRef.current = collectWords;
+  }, [collectWords]);
+
+  useEffect(() => {
+    // Fetch user email on auth state change
+    const fetchUser = async () => {
+      if (auth.currentUser) {
+        setUserEmail(auth.currentUser.email);
+      }
+    };
+
+    fetchUser();
+
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUserEmail(user.email);
@@ -66,7 +79,28 @@ const AccountMainTab = () => {
         setUserEmail(null);
       }
     });
+
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    // Fetch collectWords collection on mount
+    const fetchCollectWords = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'collectWords'));
+        const wordsData = {};
+        querySnapshot.forEach((doc) => {
+          wordsData[doc.id] = doc.data().word; // Corrected field name from 'wordArray' to 'word'
+        });
+        console.log('Fetched collectWords:', wordsData); // Debugging log
+        setCollectWords(wordsData);
+      } catch (error) {
+        console.error('Error fetching collectWords:', error);
+        alert('Failed to load grammar data.');
+      }
+    };
+
+    fetchCollectWords();
   }, []);
 
   useEffect(() => {
@@ -124,6 +158,12 @@ const AccountMainTab = () => {
 
         // Reattach button functionality
         attachButtonFunctionality();
+
+        // Add event listeners to the new container's translated words if any
+        const updatedSpans = newContainer.querySelectorAll('.clickable-word');
+        updatedSpans.forEach((span) => {
+          span.addEventListener('click', (e) => handleWordClick(e, span.textContent));
+        });
       }
     };
 
@@ -198,14 +238,8 @@ const AccountMainTab = () => {
       // Add click event to each word
       const allSpans = outputDiv.querySelectorAll('.clickable-word');
       allSpans.forEach((span) => {
-        span.addEventListener('click', () => {
-          // For each Word List item, apply random punctuation to the right
-          const wordListItems = container.querySelectorAll('.word-list-item');
-          const originalHebrew = span.textContent || '';
-
-          wordListItems.forEach((li) => {
-            li.textContent = addRandomPunctuation(originalHebrew);
-          });
+        span.addEventListener('click', (e) => {
+          handleWordClick(e, span.textContent);
         });
       });
     } catch (error) {
@@ -214,7 +248,52 @@ const AccountMainTab = () => {
     }
   };
 
-  // 2) Handle Audio Pronunciation
+  // 2) Handle Word Click
+  const handleWordClick = (event, clickedWord) => {
+    // Find the closest container relative to the clicked word
+    const container = event.target.closest('.template-container'); // Use event.target to find the specific container
+
+    if (!container) {
+      console.warn('Template container not found.');
+      return;
+    }
+
+    const wordListItems = container.querySelectorAll('.word-list-item');
+    
+    // Remove punctuation from the clicked word
+    const cleanWord = clickedWord.replace(/[\u0591-\u05C7]/g, ''); // Hebrew punctuation Unicode range
+
+    console.log('Clicked Word:', clickedWord);
+    console.log('Clean Word:', cleanWord);
+    console.log('CollectWords Data:', collectWordsRef.current); // Use ref to get latest collectWords
+
+    // Check if the cleanWord exists in collectWords
+    if (collectWordsRef.current.hasOwnProperty(cleanWord)) {
+      const dottedWords = collectWordsRef.current[cleanWord]; // Access the 'word' array
+      console.log(`Dotted Words for "${cleanWord}":`, dottedWords);
+
+      if (Array.isArray(dottedWords) && dottedWords.length > 0) {
+        // Update Word List with dotted words
+        wordListItems.forEach((li, index) => {
+          li.textContent = dottedWords[index] || ''; // Fill with dotted words or leave blank if not enough
+        });
+      } else {
+        console.warn(`The 'word' array for "${cleanWord}" is empty or not an array.`);
+        // Update Word List with "No grammar available"
+        wordListItems.forEach((li) => {
+          li.textContent = 'No grammar available';
+        });
+      }
+    } else {
+      console.warn(`"${cleanWord}" does not exist in collectWords.`);
+      // Update Word List with "No grammar available"
+      wordListItems.forEach((li) => {
+        li.textContent = 'No grammar available';
+      });
+    }
+  };
+
+  // 3) Handle Audio Pronunciation
   const handlePlayPronunciation = (e) => {
     const container = e.target.closest('.template-container');
     if (!container) return;
@@ -239,7 +318,10 @@ const AccountMainTab = () => {
     }
   };
 
-  // 3) Handle Save to Firestore
+//aaaaaaaaaaaaaaaaaaaaaaaaaaa
+//כרגע זה הקוד המקורי
+
+  // 4) Handle Save to Firestore
   const handleSave = async (e) => {
     let email = userEmail || (auth.currentUser && auth.currentUser.email);
     if (!email) {
@@ -279,6 +361,9 @@ const AccountMainTab = () => {
       alert('An error occurred while saving the sentence. Please try again.');
     }
   };
+
+//aaaaaaaaaaaaaaaaaaaaaaaaaaa
+
 
   return (
     <div className="col-span-3 bg-slate-800 dark:bg-gray-900 rounded-lg p-6 transition-all duration-300">
