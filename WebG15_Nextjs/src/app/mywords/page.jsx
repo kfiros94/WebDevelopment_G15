@@ -75,7 +75,7 @@ const MyWords = () => {
 
   const handleAddWords = async () => {
     if (highlightedWords.length === 0) return;
-
+  
     const newWords = await Promise.all(
       highlightedWords.map(async (word) => ({
         english: await translateText(word, "en"),
@@ -84,40 +84,51 @@ const MyWords = () => {
         type: "word",
       }))
     );
-
-    const updatedWords = [...words, ...newWords];
-    setWords(updatedWords);
-    setHighlightedWords([]);
-
+  
+    const updatedWords = [...words, ...newWords]; // Correctly append new words
+    setWords(updatedWords); // Update the state
+  
     if (userEmail) {
       const docRef = doc(db, "userSavedLists", userEmail);
-      const updatedSentencesList = [...sentences, ...newWords].map((w) => `${w.english} -> ${w.hebrew}`);
-      await updateDoc(docRef, { sentencesList: updatedSentencesList });
+      const docSnap = await getDoc(docRef);
+  
+      if (docSnap.exists()) {
+        const currentData = docSnap.data().sentencesList || [];
+        const updatedSentencesList = [
+          ...currentData, // Add existing Firestore list
+          ...newWords.map((w) => `${w.english} -> ${w.hebrew}`),
+        ];
+        await updateDoc(docRef, { sentencesList: updatedSentencesList });
+      }
     }
   };
-
+  
   const handleAddSentence = async () => {
     if (!translatedSentence || !englishSentence) return;
-
+  
     const newSentence = {
       english: englishSentence,
       hebrew: translatedSentence,
       pronunciation: transliterateHebrew(translatedSentence),
       type: "sentence",
     };
-
-    const updatedSentences = [...sentences, newSentence];
+  
+    const updatedSentences = [...sentences, newSentence]; // Correctly append to the `sentences` list
     setSentences(updatedSentences);
-
+  
     if (userEmail) {
       const docRef = doc(db, "userSavedLists", userEmail);
-      const updatedSentencesList = [...words, ...updatedSentences].map((w) => `${w.english} -> ${w.hebrew}`);
+      const updatedSentencesList = [
+        ...words.map((w) => `${w.english} -> ${w.hebrew}`),
+        ...updatedSentences.map((s) => `${s.english} -> ${s.hebrew}`),
+      ]; // Ensure both lists are combined properly
       await updateDoc(docRef, { sentencesList: updatedSentencesList });
     }
-
+  
     setTranslatedSentence(null);
     setEnglishSentence(null);
   };
+  
 
   const deleteWord = async (index, type) => {
     let updatedList;
