@@ -1,5 +1,6 @@
+// src/components/AccountMainTab.jsx
 import '../styles/globals.css';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { translateText } from '../utils/translationApi'; 
 import { auth, db } from '../utils/firebaseConfig';
 import { doc, setDoc, arrayUnion, collection, getDocs } from 'firebase/firestore';
@@ -20,7 +21,7 @@ const punctuationConstraints = {
   'ה': [],        // No punctuation for ה
   'ם': [],        // No punctuation for ם
   'י': ["ָ"],     // Example: only קמץ or nothing
-  'ו': ['ֹ', ''], // ו can have either cholem (ֹ) or nothing
+  'ו': ['ֹ', ''], // ו can have either חולם (ֹ) or nothing
   'מ': [ "ֶ", "ַ"], 
   'ת': [ "ַ"],
   'ח': [''],
@@ -55,12 +56,9 @@ function addRandomPunctuation(hebrewWord) {
 const AccountMainTab = () => {
   const [userEmail, setUserEmail] = useState(null);
   const [collectWords, setCollectWords] = useState({}); // State for collectWords
-  const collectWordsRef = useRef(collectWords); // Ref to hold latest collectWords
-
-  useEffect(() => {
-    // Update ref whenever collectWords state changes
-    collectWordsRef.current = collectWords;
-  }, [collectWords]);
+  const [containers, setContainers] = useState([
+    { id: Date.now(), punctuatedWords: ['Word 1', 'Word 2', 'Word 3', 'Word 4'], selectedMeaning: null, inputText: '', translatedWords: [] },
+  ]); // Initial container
 
   useEffect(() => {
     // Fetch user email on auth state change
@@ -90,7 +88,7 @@ const AccountMainTab = () => {
         const querySnapshot = await getDocs(collection(db, 'collectWords'));
         const wordsData = {};
         querySnapshot.forEach((doc) => {
-          wordsData[doc.id] = doc.data().word; // Corrected field name from 'wordArray' to 'word'
+          wordsData[doc.id] = doc.data(); // Store the entire data object including 'word' and 'meanings'
         });
         console.log('Fetched collectWords:', wordsData); // Debugging log
         setCollectWords(wordsData);
@@ -103,118 +101,34 @@ const AccountMainTab = () => {
     fetchCollectWords();
   }, []);
 
-  useEffect(() => {
-    const mainWrapper = document.getElementById('main-wrapper');
-    const clearBtn = document.getElementById('clear-btn');
+  // Function to handle adding a new container
+  const handleAddContainer = () => {
+    setContainers([
+      ...containers,
+      { id: Date.now(), punctuatedWords: ['Word 1', 'Word 2', 'Word 3', 'Word 4'], selectedMeaning: null, inputText: '', translatedWords: [] },
+    ]);
+  };
 
-    if (!mainWrapper || !clearBtn) {
-      console.warn('Main wrapper or clear button not found.');
-      return;
-    }
+  // Function to handle clearing all containers
+  const handleClearContainers = () => {
+    setContainers([
+      { id: Date.now(), punctuatedWords: ['Word 1', 'Word 2', 'Word 3', 'Word 4'], selectedMeaning: null, inputText: '', translatedWords: [] },
+    ]);
+  };
 
-    const attachButtonFunctionality = () => {
-      const translateButtons = mainWrapper.querySelectorAll('#translate-btn');
-      translateButtons.forEach((btn) => {
-        btn.removeEventListener('click', handleTranslate);
-        btn.addEventListener('click', handleTranslate);
-      });
-
-      const audioButtons = mainWrapper.querySelectorAll('#audio-btn');
-      audioButtons.forEach((btn) => {
-        btn.removeEventListener('click', handlePlayPronunciation);
-        btn.addEventListener('click', handlePlayPronunciation);
-      });
-
-      const saveButtons = mainWrapper.querySelectorAll('#save-btn');
-      saveButtons.forEach((btn) => {
-        btn.removeEventListener('click', handleSave);
-        btn.addEventListener('click', handleSave);
-      });
-    };
-
-    const handleClick = (e) => {
-      if (e.target.classList.contains('duplicate-btn')) {
-        const container = e.target.closest('.template-container');
-        if (!container) return;
-
-        const newContainer = container.cloneNode(true);
-
-        // Clear inputs in the duplicated container
-        const inputFields = newContainer.querySelectorAll('textarea, input');
-        inputFields.forEach((input) => (input.value = ''));
-
-        // Clear the clickable words area
-        const outputDiv = newContainer.querySelector('#output-hebrew');
-        if (outputDiv) outputDiv.innerHTML = '';
-
-        // Clear the Word List items
-        const wordListItems = newContainer.querySelectorAll('.word-list-item');
-        wordListItems.forEach((li) => {
-          li.textContent = '';
-        });
-
-        // Insert duplicated container at the top
-        mainWrapper.insertBefore(newContainer, mainWrapper.firstChild);
-
-        // Reattach button functionality
-        attachButtonFunctionality();
-
-        // Add event listeners to the new container's translated words if any
-        const updatedSpans = newContainer.querySelectorAll('.clickable-word');
-        updatedSpans.forEach((span) => {
-          span.addEventListener('click', (e) => handleWordClick(e, span.textContent));
-        });
-      }
-    };
-
-    const clearDuplicates = () => {
-      while (mainWrapper.children.length > 1) {
-        mainWrapper.removeChild(mainWrapper.lastChild);
-      }
-      // Reset the first container
-      const remainingContainer = mainWrapper.querySelector('.template-container');
-      if (remainingContainer) {
-        const textboxes = remainingContainer.querySelectorAll('textarea, input');
-        textboxes.forEach((textbox) => (textbox.value = ''));
-
-        const outputDiv = remainingContainer.querySelector('#output-hebrew');
-        if (outputDiv) outputDiv.innerHTML = '';
-
-        // Clear the Word List
-        const wordListItems = remainingContainer.querySelectorAll('.word-list-item');
-        wordListItems.forEach((li) => {
-          li.textContent = '';
-        });
-      }
-      console.log('All duplicates cleared, and textboxes reset.');
-      attachButtonFunctionality();
-    };
-
-    mainWrapper.addEventListener('click', handleClick);
-    clearBtn.addEventListener('click', clearDuplicates);
-
-    attachButtonFunctionality();
-
-    return () => {
-      if (mainWrapper) {
-        mainWrapper.removeEventListener('click', handleClick);
-      }
-      if (clearBtn) {
-        clearBtn.removeEventListener('click', clearDuplicates);
-      }
-    };
-  }, []);
+  // Function to handle removing a specific container
+  const handleRemoveContainer = (id) => {
+    setContainers(containers.filter((container) => container.id !== id));
+  };
 
   // 1) Handle Translation
-  const handleTranslate = async (e) => {
-    const container = e.target.closest('.template-container');
-    if (!container) return;
+  const handleTranslate = async (id) => {
+    const containerIndex = containers.findIndex((c) => c.id === id);
+    if (containerIndex === -1) return;
 
-    const inputField = container.querySelector('#input-english');
-    const outputDiv = container.querySelector('#output-hebrew');
-    if (!inputField || !outputDiv) return;
+    const container = containers[containerIndex];
+    const inputValue = container.inputText.trim();
 
-    const inputValue = inputField.value.trim();
     if (!inputValue) {
       alert('Please enter a sentence to translate.');
       return;
@@ -223,86 +137,104 @@ const AccountMainTab = () => {
     try {
       const translatedText = await translateText(inputValue);
 
-      // Each word becomes a clickable <span>
-      const words = translatedText.split(/\s+/);
-      const clickableHTML = words
-        .map(
-          (word) =>
-            `<span class="clickable-word cursor-pointer px-1 rounded 
-                    hover:bg-blue-600 hover:text-white transition-colors duration-200">${word}</span>`
-        )
-        .join(' ');
+      // Split translated text into words
+      const words = translatedText.split(/\s+/).map((word, index) => ({
+        id: index,
+        text: word,
+      }));
 
-      outputDiv.innerHTML = clickableHTML;
+      const updatedContainers = [...containers];
+      updatedContainers[containerIndex].translatedWords = words;
+      updatedContainers[containerIndex].punctuatedWords = ['Word 1', 'Word 2', 'Word 3', 'Word 4']; // Reset Word List
+      updatedContainers[containerIndex].selectedMeaning = null; // Reset selected meaning
 
-      // Add click event to each word
-      const allSpans = outputDiv.querySelectorAll('.clickable-word');
-      allSpans.forEach((span) => {
-        span.addEventListener('click', (e) => {
-          handleWordClick(e, span.textContent);
-        });
-      });
+      setContainers(updatedContainers);
     } catch (error) {
       console.error('Translation failed:', error);
       alert('An error occurred while translating. Please try again.');
     }
   };
 
-  // 2) Handle Word Click
-  const handleWordClick = (event, clickedWord) => {
-    // Find the closest container relative to the clicked word
-    const container = event.target.closest('.template-container'); // Use event.target to find the specific container
+  // 2) Handle Word Click from Translated Sentence
+  const handleWordClick = (id, clickedWord) => {
+    const containerIndex = containers.findIndex((c) => c.id === id);
+    if (containerIndex === -1) return;
 
-    if (!container) {
-      console.warn('Template container not found.');
-      return;
-    }
-
-    const wordListItems = container.querySelectorAll('.word-list-item');
-    
-    // Remove punctuation from the clicked word
-    const cleanWord = clickedWord.replace(/[\u0591-\u05C7]/g, ''); // Hebrew punctuation Unicode range
+    const cleanWord = clickedWord.replace(/[\u0591-\u05C7]/g, ''); // Remove Hebrew punctuation
 
     console.log('Clicked Word:', clickedWord);
     console.log('Clean Word:', cleanWord);
-    console.log('CollectWords Data:', collectWordsRef.current); // Use ref to get latest collectWords
+    console.log('CollectWords Data:', collectWords);
 
-    // Check if the cleanWord exists in collectWords
-    if (collectWordsRef.current.hasOwnProperty(cleanWord)) {
-      const dottedWords = collectWordsRef.current[cleanWord]; // Access the 'word' array
+    const updatedContainers = [...containers];
+
+    if (collectWords.hasOwnProperty(cleanWord)) {
+      const wordData = collectWords[cleanWord];
+      const dottedWords = wordData.word; // Assuming 'word' is an array of dotted forms
+
       console.log(`Dotted Words for "${cleanWord}":`, dottedWords);
 
       if (Array.isArray(dottedWords) && dottedWords.length > 0) {
-        // Update Word List with dotted words
-        wordListItems.forEach((li, index) => {
-          li.textContent = dottedWords[index] || ''; // Fill with dotted words or leave blank if not enough
-        });
+        updatedContainers[containerIndex].punctuatedWords = dottedWords;
+        updatedContainers[containerIndex].selectedMeaning = null; // Clear previous selection
       } else {
         console.warn(`The 'word' array for "${cleanWord}" is empty or not an array.`);
-        // Update Word List with "No grammar available"
-        wordListItems.forEach((li) => {
-          li.textContent = 'No grammar available';
-        });
+        updatedContainers[containerIndex].punctuatedWords = ['No grammar available', 'No grammar available', 'No grammar available', 'No grammar available'];
+        updatedContainers[containerIndex].selectedMeaning = null;
       }
     } else {
       console.warn(`"${cleanWord}" does not exist in collectWords.`);
-      // Update Word List with "No grammar available"
-      wordListItems.forEach((li) => {
-        li.textContent = 'No grammar available';
-      });
+      updatedContainers[containerIndex].punctuatedWords = ['No grammar available', 'No grammar available', 'No grammar available', 'No grammar available'];
+      updatedContainers[containerIndex].selectedMeaning = null;
     }
+
+    setContainers(updatedContainers);
   };
 
-  // 3) Handle Audio Pronunciation
-  const handlePlayPronunciation = (e) => {
-    const container = e.target.closest('.template-container');
+  // 3) Handle Word Click from Word List
+  const handleWordListClick = (id, word) => {
+    if (word === 'No grammar available') {
+      const containerIndex = containers.findIndex((c) => c.id === id);
+      if (containerIndex === -1) return;
+      const updatedContainers = [...containers];
+      updatedContainers[containerIndex].selectedMeaning = null;
+      setContainers(updatedContainers);
+      return;
+    }
+
+    const baseWord = word.replace(/[\u0591-\u05C7]/g, '');
+
+    console.log('Clicked Word List Item:', word);
+    console.log('Base Word:', baseWord);
+
+    const containerIndex = containers.findIndex((c) => c.id === id);
+    if (containerIndex === -1) return;
+
+    const updatedContainers = [...containers];
+
+    if (collectWords.hasOwnProperty(baseWord)) {
+      const wordData = collectWords[baseWord];
+      const index = wordData.word.indexOf(word);
+      if (index !== -1 && wordData.meanings[index]) {
+        updatedContainers[containerIndex].selectedMeaning = wordData.meanings[index];
+      } else {
+        console.warn(`No meaning found for "${word}" at index ${index}.`);
+        updatedContainers[containerIndex].selectedMeaning = null;
+      }
+    } else {
+      console.warn(`"${baseWord}" does not exist in collectWords.`);
+      updatedContainers[containerIndex].selectedMeaning = null;
+    }
+
+    setContainers(updatedContainers);
+  };
+
+  // 4) Handle Audio Pronunciation
+  const handlePlayPronunciation = (id) => {
+    const container = containers.find((c) => c.id === id);
     if (!container) return;
 
-    const outputDiv = container.querySelector('#output-hebrew');
-    if (!outputDiv) return;
-
-    const spans = outputDiv.querySelectorAll('.clickable-word');
-    const translation = Array.from(spans).map((s) => s.textContent).join(' ');
+    const translation = container.translatedWords ? container.translatedWords.map((word) => word.text).join(' ') : '';
     if (!translation.trim()) {
       alert('No translation available to play.');
       return;
@@ -310,7 +242,7 @@ const AccountMainTab = () => {
 
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(translation);
-      utterance.lang = 'he-IL'; 
+      utterance.lang = 'he-IL';
       utterance.rate = 0.8;
       speechSynthesis.speak(utterance);
     } else {
@@ -318,40 +250,34 @@ const AccountMainTab = () => {
     }
   };
 
-//aaaaaaaaaaaaaaaaaaaaaaaaaaa
-//כרגע זה הקוד המקורי
-
-  // 4) Handle Save to Firestore
-  const handleSave = async (e) => {
-    let email = userEmail || (auth.currentUser && auth.currentUser.email);
-    if (!email) {
+  // 5) Handle Save to Firestore
+  const handleSave = async (id) => {
+    if (!userEmail) {
       alert('You must be logged in to save sentences.');
       return;
     }
 
-    const container = e.target.closest('.template-container');
+    const container = containers.find((c) => c.id === id);
     if (!container) return;
 
-    const inputField = container.querySelector('#input-english');
-    if (!inputField) return;
+    if (!container.inputText || !container.inputText.trim()) {
+      alert('Please enter a sentence to translate before saving.');
+      return;
+    }
 
-    // Reconstruct the translation
-    const outputDiv = container.querySelector('#output-hebrew');
-    const spans = outputDiv.querySelectorAll('.clickable-word');
-    const translatedSentence = Array.from(spans).map((s) => s.textContent).join(' ');
+    const translatedSentence = container.translatedWords ? container.translatedWords.map((word) => word.text).join(' ') : '';
 
-    const englishSentence = inputField.value.trim();
-    if (!englishSentence || !translatedSentence) {
-      alert('Both the English sentence and its translation must be provided.');
+    if (!translatedSentence.trim()) {
+      alert('No translation available to save.');
       return;
     }
 
     try {
-      const userDocRef = doc(db, 'userSavedLists', email);
+      const userDocRef = doc(db, 'userSavedLists', userEmail);
       await setDoc(
         userDocRef,
         {
-          sentencesList: arrayUnion(`${englishSentence} -> ${translatedSentence}`),
+          sentencesList: arrayUnion(`${container.inputText} -> ${translatedSentence}`),
         },
         { merge: true }
       );
@@ -362,123 +288,168 @@ const AccountMainTab = () => {
     }
   };
 
-//aaaaaaaaaaaaaaaaaaaaaaaaaaa
-
+  // 6) Handle Input Text Change
+  const handleInputChange = (id, text) => {
+    const containerIndex = containers.findIndex((c) => c.id === id);
+    if (containerIndex === -1) return;
+    const updatedContainers = [...containers];
+    updatedContainers[containerIndex].inputText = text;
+    setContainers(updatedContainers);
+  };
 
   return (
-    <div className="col-span-3 bg-slate-800 dark:bg-gray-900 rounded-lg p-6 transition-all duration-300">
-      <div className="flex justify-end">
+    <div className="bg-slate-800 dark:bg-gray-900 rounded-lg p-3 transition-all duration-300">
+      {/* Clear All Button */}
+      <div className="flex justify-end mb-2">
         <button
-          id="clear-btn"
-          className="flex justify-end px-4 py-2 rounded-lg font-medium bg-slate-700 dark:bg-gray-800 
-                     hover:bg-blue-700 dark:hover:bg-blue-800 transition-all duration-300"
+          onClick={handleClearContainers}
+          className="px-3 py-1 rounded-md font-medium bg-slate-700 dark:bg-gray-800 
+                     hover:bg-blue-700 dark:hover:bg-blue-800 transition-all duration-300 text-sm"
         >
-          Clear
+          Clear All
         </button>
       </div>
 
+      {/* Main Wrapper */}
       <div
         id="main-wrapper"
-        className="scrollable-section max-h-96 overflow-y-auto p-6 flex flex-col gap-4"
+        className="scrollable-section max-h-80 overflow-y-auto p-3 flex flex-col gap-3"
       >
-        {/* The original container */}
-        <div id="content-container" className="flex gap-2 template-container">
-          {/* Word List (4 items) */}
-          <div
-            className="bg-slate-700 dark:bg-gray-800 rounded-lg p-2 shadow-lg 
-                       overflow-y-auto w-2/6 h-48 transition-all duration-300"
-          >
-            <h4 className="text-lg font-bold mb-4 text-white dark:text-gray-200 
-                           text-center transition-all duration-300"
+        {/* Containers */}
+        {containers.map((container) => (
+          <div key={container.id} className="flex gap-2">
+            {/* Word List (Dynamic Rendering) */}
+            <div
+              className="bg-slate-700 dark:bg-gray-800 rounded-lg p-2 shadow-lg 
+                         overflow-y-auto w-1/3 h-40 transition-all duration-300"
             >
-              Word List
-            </h4>
-            <ul className="space-y-2">
-              {['Word 1', 'Word 2', 'Word 3', 'Word 4'].map((word, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 bg-slate-800 dark:bg-gray-900 
-                             rounded-lg shadow text-white dark:text-gray-300 
-                             transition-all duration-300 word-list-item"
-                >
-                  {word}
-                </li>
-              ))}
-            </ul>
-          </div>
+              <h4 className="text-sm font-bold mb-2 text-white dark:text-gray-200 
+                             text-center transition-all duration-300">
+                Word List
+              </h4>
+              <ul className="space-y-1">
+                {container.punctuatedWords.map((word, index) => (
+                  <li
+                    key={index}
+                    className="px-2 py-1 bg-slate-800 dark:bg-gray-900 
+                               rounded-lg shadow text-white dark:text-gray-300 
+                               transition-all duration-300 cursor-pointer hover:bg-blue-600 text-xs"
+                    onClick={() => handleWordListClick(container.id, word)}
+                  >
+                    {word}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Main area with input, translation, etc. */}
-          <div
-            id="tabWords"
-            className="bg-slate-800 dark:bg-gray-900 rounded-lg p-6 shadow-lg 
-                       flex-1 transition-all duration-300"
-          >
-            <div className="flex flex-col gap-4">
-              {/* Save button */}
-              <span className="flex justify-end px-4 py-2">
-                <button
-                  id="save-btn"
-                  className="px-4 py-1 text-sm rounded-md font-medium bg-green-600 
-                             dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 
-                             transition-all duration-300"
-                >
-                  Save
-                </button>
-              </span>
-
-              {/* English input + Translate */}
-              <div className="flex items-center gap-10">
-                <textarea
-                  id="input-english"
-                  placeholder="Type text here..."
-                  className="w-full px-4 py-3 rounded-lg bg-slate-700 
-                             dark:bg-gray-800 text-white dark:text-gray-300 
-                             transition-all duration-300"
-                  rows="4"
-                ></textarea>
-                <button
-                  id="translate-btn"
-                  className="px-4 py-2 rounded-lg bg-blue-600 dark:bg-blue-700 
-                             hover:bg-blue-700 dark:hover:bg-blue-800 
-                             transition-all duration-300"
-                >
-                  Translate
-                </button>
-              </div>
-
-              {/* The "translated" box */}
-              <div className="flex items-center gap-4">
-                <div
-                  id="output-hebrew"
-                  className="w-full px-4 py-3 rounded-lg bg-slate-700 
-                             dark:bg-gray-800 text-white dark:text-gray-300 
-                             transition-all duration-300 min-h-[6rem]"
-                >
-                  {/* Clickable words inserted here by handleTranslate() */}
-                </div>
-
-                {/* Audio + Create a New Sentence */}
-                <div className="flex flex-col gap-2">
+            {/* Main Area with Input, Translation, etc. */}
+            <div
+              id="tabWords"
+              className="bg-slate-800 dark:bg-gray-900 rounded-lg p-4 shadow-lg 
+                         flex-1 transition-all duration-300"
+            >
+              <div className="flex flex-col gap-3">
+                {/* Save Button */}
+                <span className="flex justify-end">
                   <button
-                    id="audio-btn"
-                    className="px-4 py-2 bg-yellow-600 dark:bg-yellow-700 
-                               hover:bg-yellow-700 dark:hover:bg-yellow-800 
+                    onClick={() => handleSave(container.id)}
+                    className="px-3 py-0.5 text-xs rounded-md font-medium bg-green-600 
+                               dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 
                                transition-all duration-300"
                   >
-                    Audio
+                    Save
                   </button>
+                </span>
+
+                {/* English Input + Translate Button */}
+                <div className="flex items-center gap-3">
+                  <textarea
+                    placeholder="Type text here..."
+                    className="w-full px-3 py-2 rounded-lg bg-slate-700 
+                               dark:bg-gray-800 text-white dark:text-gray-300 
+                               transition-all duration-300 text-xs resize-none"
+                    rows="3"
+                    value={container.inputText}
+                    onChange={(e) => handleInputChange(container.id, e.target.value)}
+                  ></textarea>
                   <button
-                    className="px-4 py-2 bg-red-600 dark:bg-red-700 
-                               hover:bg-red-700 dark:hover:bg-red-800 
-                               duplicate-btn transition-all duration-300"
+                    onClick={() => handleTranslate(container.id)}
+                    className="px-3 py-1 rounded-lg bg-blue-600 dark:bg-blue-700 
+                               hover:bg-blue-700 dark:hover:bg-blue-800 
+                               transition-all duration-300 text-xs"
                   >
-                    Create a New Sentence
+                    Translate
                   </button>
                 </div>
+
+                {/* Translated Output */}
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-full px-3 py-2 rounded-lg bg-slate-700 
+                               dark:bg-gray-800 text-white dark:text-gray-300 
+                               transition-all duration-300 min-h-[4rem]"
+                  >
+                    {container.translatedWords.length > 0 && container.translatedWords.map((word) => (
+                      <span
+                        key={word.id}
+                        className="clickable-word cursor-pointer px-1 rounded 
+                                   hover:bg-blue-600 hover:text-white transition-colors duration-200 text-xs"
+                        onClick={() => handleWordClick(container.id, word.text)}
+                      >
+                        {word.text}{' '}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Audio Pronunciation and Remove Button */}
+                  <div className="flex flex-col gap-1">
+                    <button
+                      onClick={() => handlePlayPronunciation(container.id)}
+                      className="px-2 py-1 bg-yellow-600 dark:bg-yellow-700 
+                                 hover:bg-yellow-700 dark:hover:bg-yellow-800 
+                                 transition-all duration-300 text-xs rounded-md"
+                    >
+                      Audio
+                    </button>
+                    <button
+                      onClick={() => handleRemoveContainer(container.id)}
+                      className="px-2 py-1 bg-red-600 dark:bg-red-700 
+                                 hover:bg-red-700 dark:hover:bg-red-800 
+                                 transition-all duration-300 text-xs rounded-md"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+
+                {/* Display Sentences */}
+                {container.selectedMeaning && (
+                  <div className="mt-3 p-2 bg-slate-700 dark:bg-gray-800 rounded-lg shadow-lg">
+                    <h3 className="text-sm font-bold text-white dark:text-gray-200 mb-1">
+                      Sentences for "{container.selectedMeaning.meaning_hebrew}"
+                    </h3>
+                    <p className="text-gray-300 text-xs">
+                      <strong>Hebrew:</strong> {container.selectedMeaning.sentence_hebrew}
+                    </p>
+                    <p className="text-gray-300 text-xs">
+                      <strong>English:</strong> {container.selectedMeaning.sentence_english}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </div> 
+        ))}
+
+        {/* Button to Add a New Sentence Container */}
+        <button
+          onClick={handleAddContainer}
+          className="mt-3 px-4 py-1 bg-green-600 dark:bg-green-700 
+                     hover:bg-green-700 dark:hover:bg-green-800 
+                     rounded-lg text-white font-semibold transition-all duration-300 text-sm"
+        >
+          Create New Sentence
+        </button>
       </div>
     </div>
   );
