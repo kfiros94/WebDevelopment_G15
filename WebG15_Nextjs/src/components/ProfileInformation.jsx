@@ -1,3 +1,4 @@
+// src/components/ProfileInformation.jsx
 import React, { useEffect, useState } from 'react';
 import { auth, db } from "../utils/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
@@ -30,13 +31,13 @@ const ProfileInformation = () => {
   }, []);
 
   return (
-    <div className="col-span-1 bg-slate-800 dark:bg-gray-900 rounded-lg p-6 transition-all duration-300">
-      <h2 className="text-xl font-bold mb-4 text-white dark:text-gray-200 transition-all duration-300">
+    <div className="bg-slate-800 dark:bg-gray-900 rounded-lg p-2 transition-all duration-300 h-full">
+      <h2 className="text-md font-semibold mb-1 text-white dark:text-gray-200 transition-all duration-300">
         Profile Information
       </h2>
-      <form className="space-y-4">
+      <form className="space-y-2">
         <div>
-          <label className="block mb-2 text-gray-400 dark:text-gray-300 transition-all duration-300">
+          <label className="block mb-0.5 text-gray-400 dark:text-gray-300 transition-all duration-300 text-xs">
             Name
           </label>
           <input
@@ -44,11 +45,11 @@ const ProfileInformation = () => {
             name="name"
             value={profile.name}
             readOnly
-            className="w-full p-2 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            className="w-full p-1 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300 text-xs"
           />
         </div>
         <div>
-          <label className="block mb-2 text-gray-400 dark:text-gray-300 transition-all duration-300">
+          <label className="block mb-0.5 text-gray-400 dark:text-gray-300 transition-all duration-300 text-xs">
             Email
           </label>
           <input
@@ -56,11 +57,11 @@ const ProfileInformation = () => {
             name="email"
             value={profile.email}
             readOnly
-            className="w-full p-2 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            className="w-full p-1 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300 text-xs"
           />
         </div>
         <div>
-          <label className="block mb-2 text-gray-400 dark:text-gray-300 transition-all duration-300">
+          <label className="block mb-0.5 text-gray-400 dark:text-gray-300 transition-all duration-300 text-xs">
             Learning Level
           </label>
           <select
@@ -72,14 +73,14 @@ const ProfileInformation = () => {
                 level: e.target.value,
               }))
             }
-            className="w-full p-2 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            className="w-full p-1 rounded bg-slate-700 dark:bg-gray-800 text-white dark:text-gray-300 focus:ring-2 focus:ring-blue-500 transition-all duration-300 text-xs"
           >
             <option className="text-black dark:text-gray-300">Beginner</option>
             <option className="text-black dark:text-gray-300">Intermediate</option>
             <option className="text-black dark:text-gray-300">Advanced</option>
           </select>
         </div>
-        <button className="bg-blue-600 dark:bg-blue-700 px-4 py-2 rounded text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-all duration-300">
+        <button className="bg-blue-600 dark:bg-blue-700 px-2 py-0.5 rounded text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-all duration-300 text-xs">
           Update Profile
         </button>
       </form>
