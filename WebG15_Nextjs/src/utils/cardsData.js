@@ -12,7 +12,18 @@ const cardsData = {
             { id: 13, image: "/hebrewCards/cloud.jpg", english: "Cloud", hebrew: "עָנָן (Anan)" },
             { id: 14, image: "/hebrewCards/desert.jpg", english: "Desert", hebrew: "מִדְבָּר (Midbar)" },
             { id: 61, image: "/hebrewCards/forest.jpg", english: "Forest", hebrew: "יַעַר (Yaar)" },
-            { id: 62, image: "/hebrewCards/flower_field.jpg", english: "Flower Field", hebrew: "שְׂדֵה פְּרָחִים (Sdeh Prachim)" }
+            { id: 62, image: "/hebrewCards/flower_field.jpg", english: "Flower Field", hebrew: "שְׂדֵה פְּרָחִים (Sdeh Prachim)" },
+            { id: 108, image: "/hebrewCards/waterfall.jpg", english: "Waterfall", hebrew: "מַפָּל (Mapal)" },
+            { id: 109, image: "/hebrewCards/valley.jpg", english: "Valley", hebrew: "עֵמֶק (Emek)" },
+            { id: 110, image: "/hebrewCards/cliff.jpg", english: "Cliff", hebrew: "צוּק (Tzuk)" },
+            { id: 111, image: "/hebrewCards/cave.jpg", english: "Cave", hebrew: "מְעָרָה (Me'ara)" },
+            { id: 112, image: "/hebrewCards/beach.jpg", english: "Beach", hebrew: "חוֹף (Chof)" },
+            { id: 113, image: "/hebrewCards/grass.jpg", english: "Grass", hebrew: "דֶּשֶׁא (Deshe)" },
+            { id: 114, image: "/hebrewCards/moon.jpg", english: "Moon", hebrew: "יָרֵחַ (Yareach)" },
+            { id: 115, image: "/hebrewCards/star.jpg", english: "Star", hebrew: "כּוֹכָב (Kochav)" },
+            { id: 152, image: "/hebrewCards/hill.jpg", english: "Hill", hebrew: "גִּבְעָה (Givah)" }
+
+
         ],
         Animals: [
             { id: 3, image: "/hebrewCards/lion.jpg", english: "Lion", hebrew: "אַריֵה (Arieh)" },
@@ -26,7 +37,14 @@ const cardsData = {
             { id: 21, image: "/hebrewCards/rabbit.jpg", english: "Rabbit", hebrew: "אַרְנָב (Arnav)" },
             { id: 22, image: "/hebrewCards/frog.jpg", english: "Frog", hebrew: "צְפַרְדֵּעַ (Tzfardea)" },
             { id: 63, image: "/hebrewCards/turtle.jpg", english: "Turtle", hebrew: "צָב (Tzav)" },
-            { id: 64, image: "/hebrewCards/fox.jpg", english: "Fox", hebrew: "שׁוּעָל (Shual)" }
+            { id: 64, image: "/hebrewCards/fox.jpg", english: "Fox", hebrew: "שׁוּעָל (Shual)" },
+            { id: 116, image: "/hebrewCards/elephant.jpg", english: "Elephant", hebrew: "פִּיל (Pil)" },
+            { id: 117, image: "/hebrewCards/giraffe.jpg", english: "Giraffe", hebrew: "ג'ִירָפָה (Jirafa)" },
+            { id: 118, image: "/hebrewCards/snake.jpg", english: "Snake", hebrew: "נָחָשׁ (Nachash)" },
+            { id: 119, image: "/hebrewCards/monkey.jpg", english: "Monkey", hebrew: "קוֹף (Kof)" },
+            { id: 120, image: "/hebrewCards/penguin.jpg", english: "Penguin", hebrew: "פִּינְגְוִין (Pingvin)" },
+            { id: 153, image: "/hebrewCards/bat.jpg", english: "Bat", hebrew: "עֲטַלֵּף (Atalef)" }
+
         ],
         Food: [
             { id: 5, image: "/hebrewCards/apple.jpg", english: "Apple", hebrew: "תַּפּוּחַ (Tapuach)" },
@@ -40,7 +58,14 @@ const cardsData = {
             { id: 29, image: "/hebrewCards/rice.jpg", english: "Rice", hebrew: "אוֹרֶז (Orez)" },
             { id: 30, image: "/hebrewCards/chicken.jpg", english: "Chicken", hebrew: "עוֹף (Of)" },
             { id: 65, image: "/hebrewCards/banana.jpg", english: "Banana", hebrew: "בָּנָנָה (Banana)" },
-            { id: 66, image: "/hebrewCards/watermelon.jpg", english: "Watermelon", hebrew: "אֲבַטִּיחַ (Avatiach)" }
+            { id: 66, image: "/hebrewCards/watermelon.jpg", english: "Watermelon", hebrew: "אֲבַטִּיחַ (Avatiach)" },
+            { id: 121, image: "/hebrewCards/soup.jpg", english: "Soup", hebrew: "מָרָק (Marak)" },
+            { id: 122, image: "/hebrewCards/hummus.jpg", english: "Hummus", hebrew: "חוּמוּס (Hummus)" },
+            { id: 123, image: "/hebrewCards/falafel.jpg", english: "Falafel", hebrew: "פָלָאפֶל (Falafel)" },
+            { id: 124, image: "/hebrewCards/salad.jpg", english: "Salad", hebrew: "סָלָט (Salat)" },
+            { id: 125, image: "/hebrewCards/fish_food.jpg", english: "Fish (Food)", hebrew: "דָּג (Dag)" },
+            { id: 154, image: "/hebrewCards/pasta.jpg", english: "Pasta", hebrew: "פַּסְטָה (Pasta)" }
+
         ],
         Colors: [
             { id: 31, image: "/hebrewCards/red.jpg", english: "Red", hebrew: "אָדוֹם (Adom)" },
@@ -68,7 +93,16 @@ const cardsData = {
             { id: 49, image: "/hebrewCards/motorcycle.jpg", english: "Motorcycle", hebrew: "אוֹפַנּוֹעַ (Ofano'a)" },
             { id: 50, image: "/hebrewCards/taxi.jpg", english: "Taxi", hebrew: "מוֹנִית (Monit)" },
             { id: 69, image: "/hebrewCards/metro.jpg", english: "Metro", hebrew: "מֶטְרוֹ (Metro)" },
-            { id: 70, image: "/hebrewCards/scooter.jpg", english: "Scooter", hebrew: "קוֹרְקִינֵט (Korkinet)" }
+            { id: 70, image: "/hebrewCards/scooter.jpg", english: "Scooter", hebrew: "קוֹרְקִינֵט (Korkinet)" },
+            { id: 131, image: "/hebrewCards/ship.jpg", english: "Ship", hebrew: "אֳנִיָּה (Oniya)" },
+            { id: 132, image: "/hebrewCards/submarine.jpg", english: "Submarine", hebrew: "צוֹלֶלֶת (Tzolelet)" },
+            { id: 133, image: "/hebrewCards/tram.jpg", english: "Tram", hebrew: "חַשְׁמַלִּית (Chashmalit)" },
+            { id: 134, image: "/hebrewCards/rocket.jpg", english: "Rocket", hebrew: "טִיל (Til)" },
+            { id: 135, image: "/hebrewCards/sailboat.jpg", english: "Sailboat", hebrew: "סִירַת מִפְרָשׂ (Sirat Mifras)" },
+            { id: 140, image: "/hebrewCards/jeep.jpg", english: "Jeep", hebrew: "גִ'יפּ (Jeep)" }
+            
+    
+
         ],
         Household: [
             { id: 51, image: "/hebrewCards/chair.jpg", english: "Chair", hebrew: "כִּסֵּא (Kiseh)" },
@@ -82,7 +116,13 @@ const cardsData = {
             { id: 59, image: "/hebrewCards/clock.jpg", english: "Clock", hebrew: "שָׁעוֹן (Sha'on)" },
             { id: 60, image: "/hebrewCards/fridge.jpg", english: "Fridge", hebrew: "מְקָרֵר (Mekarer)" },
             { id: 71, image: "/hebrewCards/oven.jpg", english: "Oven", hebrew: "תַּנוּר (Tanur)" },
-            { id: 72, image: "/hebrewCards/shelf.jpg", english: "Shelf", hebrew: "מַדָּף (Madaf)" }
+            { id: 72, image: "/hebrewCards/shelf.jpg", english: "Shelf", hebrew: "מַדָּף (Madaf)" },
+            { id: 136, image: "/hebrewCards/sink.jpg", english: "Sink", hebrew: "כִּיּוֹר (Kiyor)" },
+            { id: 137, image: "/hebrewCards/curtain.jpg", english: "Curtain", hebrew: "וִילוֹן (Vilon)" },
+            { id: 138, image: "/hebrewCards/carpet.jpg", english: "Carpet", hebrew: "שָׁטִיחַ (Shatiach)" },
+            { id: 139, image: "/hebrewCards/pillow.jpg", english: "Pillow", hebrew: "כָּרִית (Karit)" },
+            { id: 155, image: "/hebrewCards/toaster.jpg", english: "Toaster", hebrew: "טוֹסְטֶר (Toaster)" },
+            { id: 156, image: "/hebrewCards/washing_machine.jpg", english: "Washing Machine", hebrew: "מְכוֹנַת כְּבִיסָה (Mechonat Kvisa)" }
         ],
         Clothing: [
             { id: 73, image: "/hebrewCards/shirt.jpg", english: "Shirt", hebrew: "חוּלְצָה (Chultza)" },
@@ -96,7 +136,13 @@ const cardsData = {
             { id: 81, image: "/hebrewCards/gloves.jpg", english: "Gloves", hebrew: "כְּפָפוֹת (Kfafot)" },
             { id: 82, image: "/hebrewCards/belt.jpg", english: "Belt", hebrew: "חוֹגֵרָה (Chogera)" },
             { id: 83, image: "/hebrewCards/tie.jpg", english: "Tie", hebrew: "עֲנִיבָה (Aniva)" },
-            { id: 84, image: "/hebrewCards/sweater.jpg", english: "Sweater", hebrew: "סְוֶודֶר (Sweder)" }
+            { id: 84, image: "/hebrewCards/sweater.jpg", english: "Sweater", hebrew: "סְוֶודֶר (Sweder)" },
+            { id: 141, image: "/hebrewCards/sandals.jpg", english: "Sandals", hebrew: "סַנְדָּלִים (Sandalim)" },
+            { id: 142, image: "/hebrewCards/pajamas.jpg", english: "Pajamas", hebrew: "פִּיג'ָמָה (Pijama)" },
+            { id: 143, image: "/hebrewCards/swimsuit.jpg", english: "Swimsuit", hebrew: "בִּגְדֵי יָם (Bigdei Yam)" },
+            { id: 144, image: "/hebrewCards/raincoat.jpg", english: "Raincoat", hebrew: "מְעִיל גֶּשֶׁם (Me'il Geshem)" },
+            { id: 157, image: "/hebrewCards/cap.jpg", english: "Cap", hebrew: "כּוֹבַע מִצְחִיָּה (Kova Mitzchiyah)" },
+            { id: 158, image: "/hebrewCards/coat.jpg", english: "Coat", hebrew: "מְעִיל (Me'il)" }
         ]
     }
 };
