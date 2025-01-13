@@ -88,16 +88,7 @@ const ContactUsPage = () => {
                             rows="4"
                             className="p-3 w-full rounded border border-gray-300 dark:border-gray-600 dark:bg-slate-700"
                         ></textarea>
-                        <div className="grid grid-cols-2 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Please type the characters *"
-                                className="p-3 w-full rounded border border-gray-300 dark:border-gray-600 dark:bg-slate-700"
-                            />
-                            <div className="flex items-center justify-center bg-gray-200 dark:bg-slate-700 p-3 rounded">
-                                <span className="text-gray-800 dark:text-white">p s t 5 s</span>
-                            </div>
-                        </div>
+
                         <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all">
                             Submit <i className="fas fa-paper-plane"></i>
                         </button>
