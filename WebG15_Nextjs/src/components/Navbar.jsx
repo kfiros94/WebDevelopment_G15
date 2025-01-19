@@ -70,7 +70,6 @@ const Navbar = () => {
               Quiz
             </Button>
           </Link>
-
           <Link href="/account" passHref>
             <Button variant="contained" color="secondary">
               Account
@@ -81,8 +80,6 @@ const Navbar = () => {
               Contact Us
             </Button>
           </Link>
-
-          {/* Sign In/Sign Out Button */}
           {user ? (
             <button
               onClick={handleSignOut}
@@ -100,12 +97,12 @@ const Navbar = () => {
               <span className="text-sm font-medium hover:underline">Sign In/Up</span>
             </Link>
           )}
-
           <ThemeToggle />
         </div>
 
         {/* Mobile Hamburger Menu (shown only below 1030px) */}
-        <div className="block lg:hidden">
+        <div className="block lg:hidden flex items-center space-x-4">
+          <ThemeToggle />
           <HamburgerMenu user={user} handleSignOut={handleSignOut} />
         </div>
       </div>
